@@ -1,7 +1,19 @@
 package com.example.alessio.safeschool;
 
-import android.support.v4.app.FragmentActivity;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,9 +22,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private final static int MY_PERMISSION_FINE_LOCATION = 101;
+    ZoomControls zoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +39,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        zoom = (ZoomControls) findViewById(R.id.zcZoom);
+        zoom.setOnZoomOutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMap.animateCamera(CameraUpdateFactory.zoomOut());
+
+            }
+        });
+        zoom.setOnZoomInClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMap.animateCamera(CameraUpdateFactory.zoomIn());
+
+            }
+        });
+
     }
 
+
+
+
+    public void onSearch(View view)
+    {
+        @SuppressLint("WrongViewCast") EditText location_tf = (EditText)findViewById(R.id.etLocationEntry);
+        String location = location_tf.getText().toString();
+        List<Address> addressList = null;
+        if(location != null || !location.equals(""))
+        {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                addressList = geocoder.getFromLocationName(location , 1);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude() , address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -42,5 +102,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            mMap.setMyLocationEnabled(true);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSION_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mMap.setMyLocationEnabled(true);
+                    }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                break;
+        }
     }
 }
