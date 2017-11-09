@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-            <!--android:enabled="true">-->
+
+            <!-- android:enabled="true"> -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +27,7 @@
         </activity>
         <activity android:name=".Tutorial" />
         <activity android:name=".Benvenuto" />
-        <!--android:enabled="false"/>-->
+        <!-- android:enabled="false"/> -->
         <activity android:name=".Home" />
         <activity
             android:name=".Preferiti"
@@ -46,7 +47,8 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:parentActivityName=".Home"/>
+            android:parentActivityName=".Home" />
+        <activity android:name=".About"></activity>
     </application>
 
 </manifest>
