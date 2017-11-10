@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainA2ctivity">
+        <activity android:name=".MainActivity">
 
             <!-- android:enabled="true"> -->
             <intent-filter>
@@ -49,9 +49,9 @@
             android:label="@string/title_activity_maps"
             android:parentActivityName=".Home" />
         <activity
-            android:name=".About"
-            android:parentActivityName=".Home" />
-        <activity android:name=".Main2Activity"></activity>
+            android:name=".Drawer"
+            android:label="@string/title_activity_drawer"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
