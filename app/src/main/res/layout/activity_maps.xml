@@ -34,37 +34,12 @@
         android:layout_below="@+id/ll1"
         tools:context="com.nbstutorials.googelemapstutorial.MapsActivity" />
 
-    <Button
-        android:id="@+id/btMark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Mark" />
-
-    <Button
-        android:id="@+id/btSatellite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/btMark"
-        android:text="Sat" />
-
-    <Button
-        android:id="@+id/btClear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/btSatellite"
-        android:text="Clear" />
-
     <ZoomControls
         android:id="@+id/zcZoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btMark"
-        android:layout_alignParentRight="true" />
-
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>
