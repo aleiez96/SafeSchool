@@ -22,7 +22,7 @@ public class Benvenuto extends AppCompatActivity {
         myPackageManager.setComponentEnabledSetting(new ComponentName(this, Benvenuto.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 
         //let’s enable the ActivityMain
-        myPackageManager.setComponentEnabledSetting(new ComponentName(this, MainActivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        myPackageManager.setComponentEnabledSetting(new ComponentName(this, MainA2ctivity.class), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 */
         Button b1 = (Button)findViewById(R.id.button);
         b1.setOnClickListener(new View.OnClickListener() {

@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainA2ctivity">
 
             <!-- android:enabled="true"> -->
             <intent-filter>
@@ -48,7 +48,10 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:parentActivityName=".Home" />
-        <activity android:name=".About"></activity>
+        <activity
+            android:name=".About"
+            android:parentActivityName=".Home" />
+        <activity android:name=".Main2Activity"></activity>
     </application>
 
 </manifest>
