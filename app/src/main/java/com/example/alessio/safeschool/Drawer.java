@@ -2,6 +2,9 @@ package com.example.alessio.safeschool;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -23,7 +26,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ZoomControls;
-
+import com.example.alessio.safeschool.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -56,9 +59,25 @@ public class Drawer extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_frame, new GmapFramgment()).commit();
 
 
+    }
 
+    private void displaySelectedScreen(int itemId) {
+
+        //creating fragment object
+        Fragment fragment = null;
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+           // ft.replace(R.id.content_frame, new GmapFramgment()).commit();
+            ft.commit();
+
+
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     @Override
@@ -96,16 +115,15 @@ public class Drawer extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        FragmentManager fm = getFragmentManager();
+
         int id = item.getItemId();
 
         if (id == R.id.nav_Filtra) {
-            // Handle the camera action
+            fm.beginTransaction().replace(R.id.content_frame, new GmapFramgment()).commit();
         } else if (id == R.id.nav_Preferiti) {
-
+            fm.beginTransaction().replace(R.id.content_frame, new PreferitiFrag()).commit();
         }
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
