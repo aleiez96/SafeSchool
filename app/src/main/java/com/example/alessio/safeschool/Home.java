@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
@@ -29,7 +30,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(),
-                        Drawer.class
+                        MapsActivity.class
                 );
 
                 startActivity(intent);
@@ -42,4 +43,6 @@ public class Home extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
     }
+
+
 }

@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -58,6 +60,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.maps_action, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -137,6 +148,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     finish();
                 }
                 break;
+        }
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                // search action
+                return true;
+            case R.id.action_location_found:
+                // location found
+
+                return true;
+            case R.id.action_refresh:
+                // refresh
+                return true;
+            case R.id.action_help:
+                // help action
+                return true;
+            case R.id.action_check_updates:
+                // check for updates action
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
