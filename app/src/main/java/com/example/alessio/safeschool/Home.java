@@ -40,7 +40,7 @@ public class Home extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.navigation, menu);
+        getMenuInflater().inflate(R.menu.maps_action, menu);
         return true;
     }
 

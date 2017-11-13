@@ -2,6 +2,7 @@ package com.example.alessio.safeschool;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,12 +65,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.maps_action, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }*/
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.maps_action, menu);
+        return true;
     }
 
 
@@ -164,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // location found
 
                 return true;
-            case R.id.action_refresh:
+            /*case R.id.action_refresh:
                 // refresh
                 return true;
             case R.id.action_help:
@@ -172,7 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return true;
             case R.id.action_check_updates:
                 // check for updates action
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
