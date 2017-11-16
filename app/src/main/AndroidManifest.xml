@@ -48,11 +48,11 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/Base.Widget.AppCompat.ActionBar" />
-        <activity
-            android:name=".Drawer"
-            android:label="@string/title_activity_drawer"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MapActivity" />
+        <activity
+            android:name=".ScrollingActivityScuola"
+            android:label="@string/title_activity_scrolling_scuola"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
