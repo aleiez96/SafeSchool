@@ -19,7 +19,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(),
-                        Preferiti.class
+                        ScrollingActivityScuola.class
                 );
 
                 startActivity(intent);
@@ -40,7 +40,7 @@ public class Home extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.maps_action, menu);
+        getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
     }
 

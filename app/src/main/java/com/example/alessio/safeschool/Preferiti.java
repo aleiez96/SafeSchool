@@ -27,7 +27,7 @@ public class Preferiti extends AppCompatActivity {
     }
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.maps_action, menu);
+        getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
     }
 }

@@ -14,7 +14,7 @@ import static com.example.alessio.safeschool.R.drawable.bt1;
 
 public class ScrollingActivityScuola extends AppCompatActivity {
 
-    boolean check=false;
+    boolean check=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,23 +23,19 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Aggiunto ai preferiti", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
                 if(check==true)
-                    check=false;
+                    fab.setImageResource(R.mipmap.staron);
+                else
+                    fab.setBackgroundColor(R.mipmap.staroff);
             }
         });
-
-
-        if(check==true)
-            fab.setBackgroundColor(Color.RED);
-        else
-            fab.setBackgroundColor(Color.BLACK);
 
     }
 }
