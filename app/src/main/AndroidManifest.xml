@@ -31,7 +31,8 @@
         <activity android:name=".Home" />
         <activity
             android:name=".Preferiti"
-            android:parentActivityName=".Home" />
+            android:parentActivityName=".Home"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -48,14 +49,15 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/Base.Widget.AppCompat.ActionBar" />
-        <activity android:name=".MapActivity" />
         <activity
             android:name=".ScrollingActivityScuola"
             android:label="@string/title_activity_scrolling_scuola"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".ActivityInfo" />
+        <activity android:name=".pref"></activity>
     </application>
 
 </manifest>

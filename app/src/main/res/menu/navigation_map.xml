@@ -15,4 +15,37 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Info" />
 
+    <item android:title="filtra">
+        <menu>
+            <group
+                android:id="@+id/checkable_group"
+                android:checkableBehavior="all">
+                <item
+                    android:id="@+id/checkable_item1"
+                    android:title="regione"/>
+                <item
+                    android:id="@+id/checkable_item2"
+                    android:title="provincia"
+                    android:checked="true"/>
+
+                <item android:title="pericolosità"
+                    android:checkable="false">
+                    <menu>
+                        <group
+                            android:id="@+id/pericolosità"
+                            android:checkableBehavior="all">
+                            <item
+                                android:id="@+id/p1"
+                                android:title="1"/>
+                            <item
+                                android:id="@+id/p2"
+                                android:title="2"/>
+                        </group>
+                    </menu>
+                </item>
+
+            </group>
+        </menu>
+    </item>
+
 </menu>
