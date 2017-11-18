@@ -1,11 +1,14 @@
 package com.example.alessio.safeschool;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,7 +18,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Preferiti extends AppCompatActivity {
+public class Aggiungi extends AppCompatActivity {
 
     MaterialSearchView searchView;
     ListView lstView;
@@ -44,7 +47,7 @@ public class Preferiti extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferiti);
+        setContentView(R.layout.activity_aggiungi);
 
        /* Button b1 = (Button)findViewById(R.id.button2);
         b1.setOnClickListener(new View.OnClickListener().OnClickListener() {
@@ -83,11 +86,13 @@ public class Preferiti extends AppCompatActivity {
 
                 //If closed Search View , lstView will return default
                 lstView = (ListView)findViewById(R.id.lstView);
-                ArrayAdapter adapter = new ArrayAdapter(Preferiti.this,android.R.layout.simple_list_item_1,lstSource);
+                ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource);
                 lstView.setAdapter(adapter);
 
             }
         });
+
+
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -104,20 +109,31 @@ public class Preferiti extends AppCompatActivity {
                             lstFound.add(item);
                     }
 
-                    ArrayAdapter adapter = new ArrayAdapter(Preferiti.this,android.R.layout.simple_list_item_1,lstFound);
+                    ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstFound);
                     lstView.setAdapter(adapter);
                 }
                 else{
                     //if search text is null
                     //return default
-                    ArrayAdapter adapter = new ArrayAdapter(Preferiti.this,android.R.layout.simple_list_item_1,lstSource);
+                    ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource);
                     lstView.setAdapter(adapter);
                 }
+
                 return true;
             }
 
         });
 
+
+        lstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent=new Intent(getApplicationContext(),
+                        ScrollingActivityScuola.class
+                );
+                intent.putExtra("hello","ciao");
+                startActivity(intent);
+            }
+        });
 
 
 
@@ -128,7 +144,7 @@ public class Preferiti extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.preferiti_menu,menu);
+        getMenuInflater().inflate(R.menu.aggiungi_menu,menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
         return true;

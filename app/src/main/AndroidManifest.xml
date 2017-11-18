@@ -30,7 +30,7 @@
         <!-- android:enabled="false"/> -->
         <activity android:name=".Home" />
         <activity
-            android:name=".Preferiti"
+            android:name=".Aggiungi"
             android:parentActivityName=".Home"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--

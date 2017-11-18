@@ -20,7 +20,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(),
-                        Preferiti.class
+                        pref.class
                 );
 
                 startActivity(intent);
