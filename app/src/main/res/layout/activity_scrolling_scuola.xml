@@ -33,16 +33,21 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_scrolling_activity_scuola" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_scrolling_activity_scuola"
+        android:layout_height="659dp"
+        tools:layout_editor_absoluteY="180dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="57dp"
+        android:layout_height="74dp"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@android:color/holo_orange_dark"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@mipmap/staroff" />
+        app:backgroundTint="@android:color/holo_blue_light"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="right|top"
+        app:srcCompat="@android:drawable/btn_star_big_off"
+        tools:layout_editor_absoluteX="338dp" />
 
 </android.support.design.widget.CoordinatorLayout>

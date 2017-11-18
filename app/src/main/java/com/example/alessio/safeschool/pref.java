@@ -1,8 +1,8 @@
 package com.example.alessio.safeschool;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,6 +24,11 @@ public class pref extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Take appropriate action for each action item click
         Intent intent;
+
+        if(item.isChecked())
+            item.setChecked(false);
+        else
+            item.setChecked(true);
         switch (item.getItemId()) {
             case R.id.tutorial_item:
                 intent=new Intent(getApplicationContext(),Tutorial.class);

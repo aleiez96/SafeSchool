@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/aggiungi"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_action_add"
         android:title="aggiungi"
         app:showAsAction="always"/>/>
     <item
@@ -15,7 +15,8 @@
         android:id="@+id/navigation_home"
         android:title="Info" />
 
-    <item android:title="filtra">
+    <item android:title="filtra"
+        android:icon="@drawable/ic_action_add">
         <menu>
             <group
                 android:id="@+id/checkable_group"
