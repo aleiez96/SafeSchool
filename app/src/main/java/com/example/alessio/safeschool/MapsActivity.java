@@ -2,6 +2,7 @@ package com.example.alessio.safeschool;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -98,6 +99,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+    //conversione da indirizzo a coordinate
+    public LatLng getLocationFromAddress(Context context, String strAddress)
+    {
+        Geocoder coder= new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try
+        {
+            address = coder.getFromLocationName(strAddress, 5);
+            if(address==null)
+            {
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return p1;
+
+    }
 
     /**
      * Manipulates the map once available.
@@ -111,7 +139,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        LatLng address = getLocationFromAddress(this,  "via amerigo vepucci,28,preganziol,treviso,31022,italia");
+        mMap.addMarker(new MarkerOptions().position(address).title("casa mia"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(address));
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
