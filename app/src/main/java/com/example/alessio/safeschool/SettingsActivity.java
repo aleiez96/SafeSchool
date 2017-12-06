@@ -1,8 +1,10 @@
 package com.example.alessio.safeschool;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -12,243 +14,267 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AppCompatCallback;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import java.util.List;
+import java.util.Map;
+
+import it.unive.dais.cevid.datadroid.lib.util.UnexpectedException;
 
 /**
- * A {@link PreferenceActivity} that presents a set of application settings. On
- * handset devices, settings are presented as a single list. On tablets,
- * settings are split by category, with category headers shown to the left of
- * the list of settings.
- * <p>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
+ * Activity che rappresenta la schermata delle impostazioni accessibile tramite il menu.
+ * Contiene metodi e utilità per la manipolazione rapida e sicura delle preferenze.
+ * Per aggiungere impostazioni all'app, è necessario aggiungere qui ulteriore codice, riproducendo pattern e convenzioni simili
+ * a quelle implementate.
+ * Si noti che molti getter sono statici e presentano 2 metodi in overload: il primo
+ *
+ * @author Alvise Spanò, Università Ca' Foscari
  */
-public class SettingsActivity extends AppCompatPreferenceActivity {
-
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener, AppCompatCallback {
     /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
+     * Costante di tipo stringa che indica la chiave dello stile della mappa nell'XML delle preferenze.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
-
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
-
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
-
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
-
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-
+    public static final String KEY_MAP_STYLE = "pref_mapStyle";
     /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
+     * Costante di tipo stringa che indica la chiave della soglia di zoom nell'XML delle preferenze.
      */
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
+    public static final String KEY_ZOOM_THRESHOLD = "pref_zoomThreshold";
 
     /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
+     * Getter dell'impostazione relativa allo stile della mappa.
+     * Riprodurre un getter simile nel caso in cui sia necessario implementare nuove impostazioni.
      *
-     * @see #sBindPreferenceSummaryToValueListener
+     * @param ctx oggetto di tipo Context.
+     * @return l'intero
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+    public static int getMapStyle(Context ctx) {
+        return getMapStyle(PreferenceManager.getDefaultSharedPreferences(ctx));
     }
 
+    /**
+     * Getter dell'impostazione relativa allo stile della mappa.
+     *
+     * @param sp oggetto SharedPreferences da cui vengono estratte le impostazioni.
+     * @return ritorna la costante intera che rappresenta lo stile della mappa.
+     * @see GoogleMap
+     */
+    public static int getMapStyle(SharedPreferences sp) {
+        int n = Integer.parseInt(sp.getString(KEY_MAP_STYLE, "0"));
+        switch (n) {
+            case 0:
+                return GoogleMap.MAP_TYPE_NORMAL;
+            case 1:
+                return GoogleMap.MAP_TYPE_SATELLITE;
+            case 2:
+                return GoogleMap.MAP_TYPE_TERRAIN;
+            case 3:
+                return GoogleMap.MAP_TYPE_HYBRID;
+            default:
+                throw new UnexpectedException(String.format("undefined map style value: %d", n));
+        }
+    }
+
+    /**
+     * Getter della soglia di zoom.
+     * La soglia di zoom è la distanza di zoom alla quale viene nascosto il pulsante HERE.
+     *
+     * @param ctx oggetto Context (tipicamente {@code this} se chiamato da dentro una Activity)
+     * @return ritorna il fattore della soglia di zoom attuale.
+     * @see MapsActivity#setHereButtonVisibility()
+     */
+    public static float getZoomThreshold(Context ctx) {
+        return getZoomThreshold(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+    }
+
+    /**
+     * Getter della soglia di zoom.
+     * La soglia di zoom è la distanza di zoom alla quale viene nascosto il pulsante HERE.
+     *
+     * @param ctx oggetto Context (tipicamente {@code this} se chiamato da dentro una Activity)
+     * @param sp  oggetto SharedPreferences da cui vengono estratte le impostazioni.
+     * @return ritorna il fattore della soglia di zoom attuale.
+     */
+    public static float getZoomThreshold(Context ctx, SharedPreferences sp) {
+        int n = Integer.parseInt(sp.getString(KEY_ZOOM_THRESHOLD, "0"));
+        switch (n) {
+            case 0:
+                return (float) ctx.getResources().getInteger(R.integer.zoomFactor_low);
+            case 1:
+                return (float) ctx.getResources().getInteger(R.integer.zoomFactor_mid);
+            case 2:
+                return (float) ctx.getResources().getInteger(R.integer.zoomFactor_high);
+            default:
+                throw new UnexpectedException(String.format("undefined zoom threshold value: %d", n));
+        }
+    }
+
+    /**
+     * Questo metodo viene chiamato quando questa activity parte.
+     *
+     * @param savedInstanceState stato dell'activity salvato precedentemente (opzionale).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionBar();
+        addPreferencesFromResource(R.xml.preferences);
+        updateAllSummaries();
+        AppCompatDelegate delegate = AppCompatDelegate.create(this, this);
+        delegate.onCreate(savedInstanceState);
+        delegate.getSupportActionBar();
     }
 
     /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
+     * Chiamato quando si seleziona una voce del menu.
+     *
+     * @param item oggetto che rappresenta la voce del menu cliccata.
+     * @return ritorna true per continuare a chiamare altre callback; false altrimenti.
+     * @see Activity#onOptionsItemSelected(MenuItem)
      */
     @Override
-    public boolean onIsMultiPane() {
-        return isXLargeTablet(this);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * Metodo proprietario che aggiorna tutti i summary delle impostazioni.
+     * I summary sono le brevi descrizioni sotto ciascuna voce cliccabile, e devono mostrare
+     * l'impostazione attuale.
+     * @see SettingsActivity#updateSummaryWithActiveValue(Preference, String)
+     */
+    protected void updateAllSummaries() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        // trucco per aggiornare i summary automagicamente
+        for (Map.Entry<String, ?> e : sp.getAll().entrySet()) {
+            onSharedPreferenceChanged(sp, e.getKey());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    /**
+     * Chiamato quando viene modificata una impostazione.
+     * Questo è il metodo principale dove fare qualcosa quando una impostazione viene cambiata dall'utente.
+     * Tutti i comportamenti che scattano alla modifica di una preferenza vanno in qualche modo messi qui.
+     * Nel template qui fornito non ci sono comportamenti di questa categoria, ma le preferenze vengono ispezionate
+     * esplicitamente alla bisogna tramite i getter forniti.
+     * Questo metodo si occupa anche del tenere aggiornati i summary.
+     *
+     * @param sp l'oggetto SharedPreference.
+     * @param k la chiave delle preferenze che è stata modificata.
      */
     @Override
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
-    }
+    public void onSharedPreferenceChanged(SharedPreferences sp, String k) {
+        Preference p = findPreference(k);
+        switch (k) {
+            case KEY_MAP_STYLE: {
+                int n = getMapStyle(sp);
+                String s;
+                switch (n) {
+                    case GoogleMap.MAP_TYPE_NORMAL:
+                        s = getString(R.string.menu_mapStyle_normal);
+                        break;
+                    case GoogleMap.MAP_TYPE_SATELLITE:
+                        s = getString(R.string.menu_mapStyle_satellite);
+                        break;
+                    case GoogleMap.MAP_TYPE_TERRAIN:
+                        s = getString(R.string.menu_mapStyle_terrain);
+                        break;
+                    case GoogleMap.MAP_TYPE_HYBRID:
+                        s = getString(R.string.menu_mapStyle_hybrid);
+                        break;
+                    default:
+                        throw new UnexpectedException(String.format("undefined map style value: %d", n));
+                }
+                updateSummaryWithActiveValue(p, s);
 
-    /**
-     * This method stops fragment injection in malicious applications.
-     * Make sure to deny any unknown fragments here.
-     */
-    protected boolean isValidFragment(String fragmentName) {
-        return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
-    }
-
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
+                break;
             }
-            return super.onOptionsItemSelected(item);
+            case KEY_ZOOM_THRESHOLD: {
+                Float x = getZoomThreshold(this, sp);
+                String s;
+                if (x.compareTo((float) getResources().getInteger(R.integer.zoomFactor_low)) == 0)
+                    s = getString(R.string.menu_zoomThreshold_low);
+                else if (x.compareTo((float) getResources().getInteger(R.integer.zoomFactor_high)) == 0)
+                    s = getString(R.string.menu_zoomThreshold_high);
+                else if (x.compareTo((float) getResources().getInteger(R.integer.zoomFactor_mid)) == 0)
+                    s = getString(R.string.menu_zoomThreshold_mid);
+                else
+                    throw new UnexpectedException(String.format("undefined zoom threshold value: %g", x));
+                updateSummaryWithActiveValue(p, s);
+                break;
+            }
         }
     }
 
     /**
-     * This fragment shows notification preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
+     * Metodo proprietario che aggiorna il summary di una impostazione data.
+     * I summary sono le brevi descrizioni sotto ciascuna voce cliccabile, e devono mostrare
+     * l'impostazione attuale.
+     * Questo metodo renderizza correttamente tale summary.
+     *
+     * @param p l'oggetto di tipo Preference.
+     * @param s la stringa da mostrare come valore attualmente attivo nel summary.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
+    private void updateSummaryWithActiveValue(Preference p, String s) {
+        String[] ss = p.getSummary().toString().split("\\.");
+        p.setSummary(String.format("%s. (%s)", ss[0], s));
     }
 
     /**
-     * This fragment shows data and sync preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
+     * Lasciata vuota.
+     * @see AppCompatCallback#onSupportActionModeStarted(ActionMode)
+     * @param mode action mode.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class DataSyncPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_data_sync);
-            setHasOptionsMenu(true);
+    @Override
+    public void onSupportActionModeStarted(ActionMode mode) {
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
-        }
+    }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
+    /**
+     * Lasciata vuota.
+     * @see AppCompatCallback#onSupportActionModeFinished(ActionMode)
+     * @param mode action mode.
+     */
+    @Override
+    public void onSupportActionModeFinished(ActionMode mode) {
+
+    }
+
+    /**
+     * Lasciata vuota.
+     * @see AppCompatCallback#onWindowStartingSupportActionMode(ActionMode.Callback)
+     * @param callback callback passata dal sistema.
+     */
+    @Nullable
+    @Override
+    public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
+        return null;
     }
 }
