@@ -2,6 +2,7 @@ package com.example.alessio.safeschool;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -24,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -59,6 +61,7 @@ import java.util.concurrent.ExecutionException;
 
 import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
 import it.unive.dais.cevid.datadroid.lib.parser.CsvRowParser;
+import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressBarManager;
 import it.unive.dais.cevid.datadroid.lib.util.MapItem;
 
 /**
@@ -582,102 +585,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     // demo code
-    public static Location reverseGeocode(String address, Context context) {
-        Location location = new Location("reverseGeocoded");
-
-        if (address != null) {
-
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-            try {
-                List<Address> addressResult = geocoder.getFromLocationName(address, 1);
-                if (addressResult !=null && !addressResult.isEmpty()) {
-                    Address resultAddress = addressResult.get(0);
-                    location.setLatitude(resultAddress.getLatitude()*1E6);
-                    location.setLongitude(resultAddress.getLongitude()*1E6);
-                }
-            } catch (IOException e) {
-
-                location = null;
-            }
-        }
-        return location;
-    }
-
-
-    public LatLng getLocationFromAddress(Context context, String strAddress)
-    {
-        Geocoder coder= new Geocoder(context);
-        List<Address> address;
-        LatLng p1 = null;
-
-        try
-        {
-            address = coder.getFromLocationName(strAddress, 5);
-            if(address==null)
-            {
-                return null;
-            }
-            Address location = address.get(0);
-            location.getLatitude();
-
-            location.getLongitude();
-            Log.i("I", String.valueOf(location.getLongitude()));
-            p1 = new LatLng(location.getLatitude(),location.getLongitude());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return p1;
-
-    }
-
-
     @Nullable
     private Collection<Marker> markers;
-
     private void demo() {
         try {
-
-            InputStream is = getResources().openRawResource(R.raw.coordinate_perse);
-            CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
+            InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
+            CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";", null/*new ProgressBarManager(MapsActivity, ProgressBar)*/);
             List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
             List<MapItem> l = new ArrayList<>();
             for (final CsvRowParser.Row r : rows) {
-/*
-                String lat = r.get("INDIRIZZOSCUOLA")+","+r.get("CAPSCUOLA")+","+r.get("PROVINCIA");
-                Location location=reverseGeocode(lat,getApplicationContext());
-                LatLng i= getLocationFromAddress(getApplicationContext(),lat);
+                l.add(new MapItem() {
+                    @Override
+                    public LatLng getPosition() {
+                        String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE");
+                        return new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+                    }
+                    /*@Override
+                    public LatLng getPosition() {
+                        String ind = r.get("INDIRIZZOSCUOLA");
+                        String cap = r.get("CAPSCUOLA");
+                        return getLocationFromAddress(ind+","+cap);
+                    }*/
 
-                double latt = location.getLatitude();
-                double lng = location.getLongitude();
+                    @Override
+                    public String getTitle() {
+                        return r.get("DENOMINAZIONEISTITUTORIFERIMENTO");
+                    }
 
-                Log.i("i",String.valueOf(lng));
-                //Log.i("I", r.get("LATITUDINE"));
-                //Log.i("I", r.get("LONGITUDINE"));
-  */             if(r.get("AREAGEOGRAFICA").equals("NORD EST") && (Double.parseDouble(r.get("LATITUDINE"))!=0.0 || Double.parseDouble(r.get("LONGITUDINE"))!=0.0)) {
-                    l.add(new MapItem() {
-                        @Override
-                        public LatLng getPosition() {
-                            String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE");
-
-
-                            return new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-                        }
-
-                        @Override
-                        public String getTitle() {
-                            return r.get("DENOMINAZIONESCUOLA");
-                        }
-
-                        @Override
-                        public String getDescription() {
-                            return r.get("INDIRIZZOSCUOLA")+","+r.get("CAPSCUOLA")+","+r.get("PROVINCIA");
-                        }
-                    });
-                }
+                    @Override
+                    public String getDescription() {
+                        return (r.get("PROVINCIA") + ", " + r.get("REGIONE"));
+                    }
+                });
             }
-
             markers = putMarkersFromMapItems(l);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();

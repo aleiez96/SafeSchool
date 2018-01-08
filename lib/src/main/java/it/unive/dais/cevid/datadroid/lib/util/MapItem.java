@@ -2,32 +2,28 @@ package it.unive.dais.cevid.datadroid.lib.util;
 
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Classe astratta che rappresenta una entità visualizzabile su una mappa.
- * I metodi presenti sono il minimo indispensabile per creare un Marker in una GoogleMap, dotato di posizione, titolo e descrizione.
- * @author Alvise Spanò, Università Ca' Foscari
- */
-public abstract class MapItem {
+import java.io.Serializable;
 
+/**
+ * Rappresenta un oggetto visualizzabile sulla mappa, con le informazioni minime per il posizionamento e la creazione di un marker.
+ */
+public interface MapItem extends Serializable {
     /**
      * Ritorna la posizione.
-     * @return la posizione in un oggetto di tipo LatLng
+     *
+     * @return la posizione in un oggetto di tipo LatLng.
      */
-    public abstract LatLng getPosition();
-
+    LatLng getPosition();
     /**
-     * Ritorna il titolo.
-     * @return la stringa col titolo.
+     * Ritorna il titolo, o il nome, dell'item.
+     *
+     * @return il nome.
      */
-    public String getTitle() {
-        return toString();
-    }
-
+    String getTitle();
     /**
      * Ritorna la descrizione.
-     * @return la stringa con la descrizione.
+     *
+     * @return la descrizione.
      */
-    public String getDescription() {
-        return getTitle();
-    }
+    String getDescription();
 }

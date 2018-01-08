@@ -1,6 +1,7 @@
 package it.unive.dais.cevid.datadroid.lib.parser;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +20,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import it.unive.dais.cevid.datadroid.lib.util.ProgressStepper;
+import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressBarManager;
+import it.unive.dais.cevid.datadroid.lib.parser.progress.PercentProgressStepper;
+import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressStepper;
 
 
 public class AppaltiParser extends AbstractAsyncParser<AppaltiParser.Data, ProgressStepper> {
@@ -27,16 +30,16 @@ public class AppaltiParser extends AbstractAsyncParser<AppaltiParser.Data, Progr
     protected static final String DATI_ASSENTI_O_MAL_FORMATTATI = "Dati assenti o mal formattati";
     protected List<URL> urls;
 
-    public AppaltiParser(List<URL> urls) {
+    public AppaltiParser(List<URL> urls, @Nullable ProgressBarManager pbm) {
+        super(pbm);
         this.urls = urls;
     }
-
 
     @NonNull
     @Override
     public List<Data> parse() throws IOException {
         List<Data> datalist = new ArrayList<>();
-        ProgressStepper prog = new ProgressStepper(urls.size());
+        PercentProgressStepper prog = new PercentProgressStepper(urls.size());
         for (URL url : urls) {
             try {
                 URLConnection conn = url.openConnection();
@@ -67,7 +70,7 @@ public class AppaltiParser extends AbstractAsyncParser<AppaltiParser.Data, Progr
         return (Element) e.getElementsByTagName(tagName).item(0);
     }
 
-    protected List<Data> parseNodes(ProgressStepper prog, NodeList nodes) {
+    protected List<Data> parseNodes(PercentProgressStepper prog, NodeList nodes) {
         List<Data> r = new ArrayList<>();
         prog = prog.getSubProgressStepper(nodes.getLength());
         for (int i = 0; i < nodes.getLength(); i++) {
