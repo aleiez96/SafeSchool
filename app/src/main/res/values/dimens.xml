@@ -7,4 +7,13 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="img_info">300dp</dimen>
+    <dimen name="info_padding">30dp</dimen>
+    <dimen name="info_padding_2">40dp</dimen>
+    <dimen name="info_text_size">20dp</dimen>
+    <dimen name="linear_layout_height">120dp</dimen>
+    <dimen name="linear_layout_width">50dp</dimen>
+    <dimen name="linear_layout_margin_bottom">40dp</dimen>
+    <dimen name="linear_layout_margin_left">10dp</dimen>
+    <dimen name="button_margin">10dp</dimen>
 </resources>
