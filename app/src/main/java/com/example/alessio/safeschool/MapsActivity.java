@@ -2,13 +2,9 @@ package com.example.alessio.safeschool;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -48,16 +44,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
@@ -79,7 +72,7 @@ import it.unive.dais.cevid.datadroid.lib.util.MapItem;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
@@ -157,6 +150,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Log.d(TAG, "no current position available");
             }
         });
+
+
+
+/*
+            gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+                InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
+                CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";" ,new ProgressBarManager(MapsActivity, ProgressBar));
+
+                List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(getApplicationContext() ,ScrollingActivityScuola.class);
+                   for (final CsvRowParser.Row r : rows) {
+                        if(r.get("CODICESCUOLA").equals(marker.getTitle())) {
+                            intent.putExtra("nomeScuola", r.get("DENOMINAZIONESCUOLA"));
+                        }
+                    }
+                    startActivity(intent);
+
+
+                }
+            });
+
+*/
     }
 
 
@@ -275,6 +293,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.navigation_home:
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
+           /* case R.id.tv:
+                demo("TREVISO");
+                break;
+*/
         }
         return false;
     }
@@ -444,6 +466,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         applyMapSettings();
 
         demo();
+        gMap.setOnInfoWindowClickListener(this);
     }
 
     /**
@@ -582,7 +605,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-
     // Declare a variable for the cluster manager.
     private ClusterManager<MyItem> mClusterManager;
 
@@ -610,7 +632,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
             List<MapItem> l = new ArrayList<>();
             for (final CsvRowParser.Row r : rows) {
-                String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("DENOMINAZIONEISTITUTORIFERIMENTO"), snip = r.get("PROVINCIA") + ", " + r.get("REGIONE");
+                String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("CODICESCUOLA"), snip = r.get("DESCRIZIONECOMUNE") + ", " +r.get("PROVINCIA") + ", " + r.get("INDIRIZZOSCUOLA");
                 MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
                 mClusterManager.addItem(offsetItem);
             }
@@ -618,7 +640,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
     }
-
 
     // demo code
     @Nullable
@@ -631,40 +652,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
             List<MapItem> l = new ArrayList<>();
             for (final CsvRowParser.Row r : rows) {
-                String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"),den=r.get("DENOMINAZIONEISTITUTORIFERIMENTO"),snip=r.get("PROVINCIA") + ", " + r.get("REGIONE");
-                MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng),den,snip);
-                mClusterManager.addItem(offsetItem);
+               // if(r.get("PROVINCIA").equals(provincia)){
                 l.add(new MapItem() {
+
                     @Override
                     public LatLng getPosition() {
                         String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE");
-                        MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng));
-                        mClusterManager.addItem(offsetItem);
                         return new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-                    }
-                    @Override
-                    public LatLng getPosition() {
-                        String ind = r.get("INDIRIZZOSCUOLA");
-                        String cap = r.get("CAPSCUOLA");
-                        return getLocationFromAddress(ind+","+cap);
                     }
 
                     @Override
                     public String getTitle() {
-                        return r.get("DENOMINAZIONEISTITUTORIFERIMENTO");
+                        return r.get("CODICESCUOLA");
                     }
 
                     @Override
                     public String getDescription() {
-                        return (r.get("PROVINCIA") + ", " + r.get("REGIONE"));
+                        return (r.get("DESCRIZIONECOMUNE") + ", " + r.get("PROVINCIA")+", "+r.get("INDIRIZZOSCUOLA"));
                     }
                 });
             }
-
+         //   }
+            markers = putMarkersFromMapItems(l);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }*/
     }
 
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
+        //Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
+       // intent.putExtra("nomeScuola","booh");
+        //startActivity(intent);
+    }
 }

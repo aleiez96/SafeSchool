@@ -61,10 +61,10 @@ public class Aggiungi extends AppCompatActivity {
             }
         });
 */
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        /*Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Material Search");
-        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));*/
 
         lstView = (ListView)findViewById(R.id.lstView);
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
