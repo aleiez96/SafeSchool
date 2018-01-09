@@ -22,6 +22,9 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //String dato1 = getIntent().getExtras().getString("nomeScuola");
+        //setTitle(dato1);
+
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
