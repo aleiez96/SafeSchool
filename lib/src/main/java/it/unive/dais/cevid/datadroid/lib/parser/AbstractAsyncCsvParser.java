@@ -16,9 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressBarManager;
 import it.unive.dais.cevid.datadroid.lib.util.Prelude;
-import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressStepper;
 
 /**
  * Classe astratta che rappresenta la superclasse dei parser CSV.
@@ -41,27 +39,22 @@ import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressStepper;
  * @param <Data> tipo di una riga di dati.
  * @author Alvise Spanò, Università Ca' Foscari
  */
-public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<Data, ProgressStepper> {
+public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<Data, Integer> {
 
     private static final String TAG = "AbstractAsyncCsvParser";
 
     protected final boolean hasActualHeader;
-    @NonNull
-    protected final String sep;
-    @NonNull
-    protected final BufferedReader reader;
-    @Nullable
-    protected String[] header = null;
+    @NonNull protected final String sep;
+    @NonNull protected final BufferedReader reader;
+    @Nullable protected String[] header = null;
 
     /**
      * Costruttore tramite parametro di tipo Reader.
-     *
-     * @param rd              parametro di tipo Reader da cui leggere il CSV.
+     * @param rd        parametro di tipo Reader da cui leggere il CSV.
      * @param hasActualHeader flag booleano che indica se il CSV ha un header alla prima riga.
-     * @param sep             separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
+     * @param sep       separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
      */
-    protected AbstractAsyncCsvParser(@NonNull Reader rd, boolean hasActualHeader, @NonNull String sep, @Nullable ProgressBarManager pbm) {
-        super(pbm);
+    protected AbstractAsyncCsvParser(@NonNull Reader rd, boolean hasActualHeader, @NonNull String sep) {
         this.reader = new BufferedReader(rd);
         this.sep = sep;
         this.hasActualHeader = hasActualHeader;
@@ -69,33 +62,30 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
 
     /**
      * Costruttore tramite file.
-     *
-     * @param file            oggetto di tipo File.
+     * @param file      oggetto di tipo File.
      * @param hasActualHeader flag booleano che indica se il CSV ha un header alla prima riga.
-     * @param sep             separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
+     * @param sep       separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
      * @throws FileNotFoundException lanciata se il file non esiste.
      */
-    protected AbstractAsyncCsvParser(@NonNull File file, boolean hasActualHeader, @NonNull String sep, @Nullable ProgressBarManager pbm) throws FileNotFoundException {
-        this(new FileReader(file), hasActualHeader, sep, pbm);
+    protected AbstractAsyncCsvParser(@NonNull File file, boolean hasActualHeader, @NonNull String sep) throws FileNotFoundException {
+        this(new FileReader(file), hasActualHeader, sep);
     }
 
     /**
      * Costruttore tramite URL.
-     *
-     * @param url             URL da cui scaricare il CSV.
+     * @param url       URL da cui scaricare il CSV.
      * @param hasActualHeader flag booleano che indica se il CSV ha un header alla prima riga.
-     * @param sep             separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
+     * @param sep       separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
      * @throws IOException lanciata quando la conversione da URL a reader fallisce.
      */
-    protected AbstractAsyncCsvParser(@NonNull URL url, boolean hasActualHeader, @NonNull String sep, @Nullable ProgressBarManager pbm) throws IOException {
-        this(urlToReader(url), hasActualHeader, sep, pbm);
+    protected AbstractAsyncCsvParser(@NonNull URL url, boolean hasActualHeader, @NonNull String sep) throws IOException {
+        this(urlToReader(url), hasActualHeader, sep);
     }
 
     /**
      * Implementa un parser linea-per-linea con progresso.
      * Se ridefinita da una sottoclasse, si deve occupare non solo del parsing ma anche della gestione
      * dell'header, sia in caso sia presente sia in caso non lo sia.
-     *
      * @return lista di FiltrableData.
      * @throws IOException lanciata se il reader fallisce.
      */
@@ -105,13 +95,12 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
         if (hasActualHeader()) setHeader(split(reader.readLine()));
         List<Data> r = new ArrayList<>();
         String line;
-        for (ProgressStepper prog = new ProgressStepper(); (line = reader.readLine()) != null; prog.step()) {
-            int linen = prog.getCurrentProgress();
+        int linen;
+        for (linen = 0; (line = reader.readLine()) != null; ++linen) {
             try {
                 if (linen == 0 && !hasActualHeader()) setDefaultHeader(line);
                 r.add(parseLine(line));
-                publishProgress(prog);
-
+                publishProgress(linen);
             } catch (ParseException e) {
                 Log.w(TAG, String.format("recoverable parse error at line %d: %s", linen, e.getLocalizedMessage()));
             }
@@ -119,20 +108,15 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
         return r;
     }
 
-    /**
-     * Splitta una linea CSV secondo il separatore impostato e rispettando le regole di escaping nelle quotation.
-     *
-     * @param line la stringa da splittare.
-     * @return l'array di stringhe splittate.
-     */
     protected String[] split(String line) {
-        return line.split(String.format("%s(?=([^\"]*\"[^\"]*\")*[^\"]*$)", getSeparator()));
+        String[] r = line.split(String.format("%s(?=([^\"]*\"[^\"]*\")*[^\"]*$)", getSeparator())); // TODO: testare meglio questa regex con altri separatori e altri casi
+//        Log.d("split", String.format("INPUT: %s\nOUTPUT: %s", line, r));
+        return r;
     }
 
     /**
      * Imposta l'header di default quando non ce n'è uno nel CSV.
      * Dall'implementazione della {@code parse} viene chiamato una volta sola dopo aver parsato la prima linea.
-     *
      * @param line stringa che contiene la linea del CSV da cui estrapolare il numero di colonne per generare l'header.
      */
     protected void setDefaultHeader(String line) {
@@ -146,7 +130,6 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
     /**
      * Parser di una singola linea.
      * L'implementazione di default invoca {@code parseColumns} passandogli la linea splittata tramite il separatore dato.
-     *
      * @param line stringa con la linea da parsare.
      * @return ritorna un singolo oggetto di tipo FiltrableData.
      * @throws ParseException lanciata se il parser fallisce.
@@ -158,7 +141,6 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
 
     /**
      * Questo metodo deve essere implementato nelle sottoclassi.
-     *
      * @param columns array di stringhe che contiene ogni colonna di una riga del CSV.
      * @return ritorna un singolo oggetto di tipo FiltrableData.
      * @throws ParseException lanciata se il parser fallisce.
@@ -168,7 +150,6 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
 
     /**
      * Getter del separatore.
-     *
      * @return ritorna il separatore.
      */
     @NonNull
@@ -181,7 +162,6 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
      * Questo metodo ritorna sempre un header, generato di default oppure parsato dal CSV; può ritornare
      * {@code null} prima che il parsing abbia luogo, ma non significa che l'header non c'è.
      * Un header c'è sempre - generato oppure no.
-     *
      * @return ritorna l'header. Se {@code null} significa che non è ancora stato parsato o impostato.
      */
     @Nullable
@@ -193,7 +173,6 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
      * Forza un header per questo parser CSV.
      * Cambiare header può sollevare l'eccezione {@code IllegalArgumentException} se la lunghezza dell'header precedente è diversa da quella del
      * nuovo header.
-     *
      * @param columns array di stringhe con i nomi delle colonne.
      */
     public void setHeader(@NonNull String[] columns) {
@@ -208,17 +187,13 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
      * Da non confondere con un header nullo, che invece significa che non è stato ancora parsato.
      * Il metodo {@code getHeader} ritorna sempre un header - generato automaticamente oppure realmente presente nel CSV - ma questo metodo
      * ritorna true solamente se tale header è presente nel CSV.
-     *
      * @return true se il CSV ha un header come prima linea; false altrimenti.
      */
-    public boolean hasActualHeader() {
-        return hasActualHeader;
-    }
+    public boolean hasActualHeader() { return hasActualHeader; }
 
     /**
      * Esegui il trim di ogni stringa dell'array dato.
      * Vengono eliminati i caratteri di spazio e le virgolette.
-     *
      * @param ss l'array di stringhe.
      */
     protected String[] trimStrings(String[] ss) {
@@ -232,7 +207,6 @@ public abstract class AbstractAsyncCsvParser<Data> extends AbstractAsyncParser<D
     /**
      * Esegui il trim di una stringa.
      * Vengono eliminati i caratteri di spazio e le virgolette.
-     *
      * @param s la stringa.
      */
     protected static String trimString(String s) {

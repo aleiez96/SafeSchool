@@ -1,14 +1,12 @@
 package it.unive.dais.cevid.datadroid.lib.parser;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.text.ParseException;
 
-import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressBarManager;
 import it.unive.dais.cevid.datadroid.lib.util.UnexpectedException;
 
 /**
@@ -42,8 +40,8 @@ public class CsvRowParser extends AbstractAsyncCsvParser<CsvRowParser.Row> {
      * @param hasHeader flag booleano che indica se il CSV ha un header alla prima riga.
      * @param sep       separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
      */
-    public CsvRowParser(@NonNull Reader rd, boolean hasHeader, String sep, @Nullable ProgressBarManager pbm) {
-        super(rd, hasHeader, sep, pbm);
+    public CsvRowParser(@NonNull Reader rd, boolean hasHeader, String sep) {
+        super(rd, hasHeader, sep);
     }
 
     /**
@@ -54,8 +52,8 @@ public class CsvRowParser extends AbstractAsyncCsvParser<CsvRowParser.Row> {
      * @param sep       separatore tra le colonne del CSV (ad esempio il punto e virgola ";" oppure la virgola ",").
      * @throws FileNotFoundException lanciata se il file non esiste.
      */
-    public CsvRowParser(@NonNull File file, boolean hasHeader, String sep, @Nullable ProgressBarManager pbm) throws FileNotFoundException {
-        super(file, hasHeader, sep, pbm);
+    public CsvRowParser(@NonNull File file, boolean hasHeader, String sep) throws FileNotFoundException {
+        super(file, hasHeader, sep);
     }
 
     /**

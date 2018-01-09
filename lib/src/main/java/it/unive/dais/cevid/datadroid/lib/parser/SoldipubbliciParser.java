@@ -1,7 +1,6 @@
 package it.unive.dais.cevid.datadroid.lib.parser;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,8 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressBarManager;
-import it.unive.dais.cevid.datadroid.lib.parser.progress.PercentProgressStepper;
+import it.unive.dais.cevid.datadroid.lib.util.ProgressStepper;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,16 +34,16 @@ import okhttp3.RequestBody;
  * </pre></blockquote>
  *
  * @author Alvise Spanò, Università Ca' Foscari
+ * @param <Progress>
  */
-public class SoldipubbliciParser extends AbstractAsyncParser<SoldipubbliciParser.Data, PercentProgressStepper> {
+public class SoldipubbliciParser extends AbstractAsyncParser<SoldipubbliciParser.Data, ProgressStepper> {
 
     private static final String TAG = "SoldipubbliciParser";
 
     protected String codiceComparto;
     protected String codiceEnte;
 
-    public SoldipubbliciParser(String codiceComparto, String codiceEnte, @Nullable ProgressBarManager pbm) {
-        super(pbm);
+    public SoldipubbliciParser(String codiceComparto, String codiceEnte) {
         this.codiceComparto = codiceComparto;
         this.codiceEnte = codiceEnte;
     }
@@ -60,7 +58,7 @@ public class SoldipubbliciParser extends AbstractAsyncParser<SoldipubbliciParser
 
         Request request = new Request.Builder()
                 .url("http://soldipubblici.gov.it/it/ricerca")
-                .addHeader("Content-Type", "application/content-www-form-urlencoded; charset=UTF-8")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
                 .addHeader("Accept", "Application/json")
                 .addHeader("X-Requested-With", "XMLHttpRequest")
                 .post(fromRequest)
@@ -77,7 +75,7 @@ public class SoldipubbliciParser extends AbstractAsyncParser<SoldipubbliciParser
         List<Data> r = new ArrayList<>();
         JSONObject jo = new JSONObject(data);
         JSONArray ja = jo.getJSONArray("data");
-        PercentProgressStepper prog = new PercentProgressStepper(ja.length());
+        ProgressStepper prog = new ProgressStepper(ja.length());
         for (int i =0; i< ja.length(); i++){
             JSONObject j = ja.getJSONObject(i);
             Data d = new Data();
@@ -106,6 +104,8 @@ public class SoldipubbliciParser extends AbstractAsyncParser<SoldipubbliciParser
             publishProgress(prog);
         }
         return r;
+
+        // TODO: 13/09/17  aggiungere controlli
     }
 
 

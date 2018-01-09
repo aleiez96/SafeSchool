@@ -25,7 +25,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -61,7 +60,6 @@ import java.util.concurrent.ExecutionException;
 
 import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
 import it.unive.dais.cevid.datadroid.lib.parser.CsvRowParser;
-import it.unive.dais.cevid.datadroid.lib.parser.progress.ProgressBarManager;
 import it.unive.dais.cevid.datadroid.lib.util.MapItem;
 
 /**
@@ -590,7 +588,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void demo() {
         try {
             InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
-            CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";", null/*new ProgressBarManager(MapsActivity, ProgressBar)*/);
+            CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";"/*,new ProgressBarManager(MapsActivity, ProgressBar)*/);
             List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
             List<MapItem> l = new ArrayList<>();
             for (final CsvRowParser.Row r : rows) {
