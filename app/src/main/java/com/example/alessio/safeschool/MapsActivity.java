@@ -78,7 +78,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
-    static List<CsvRowParser.Row> rows;
+
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
     // alcune costanti
@@ -622,29 +622,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected Void doInBackground(Void... voids) {
+            List<CsvRowParser.Row> rparse= Home.rows;
             int l,x=0,f;
-            runOnUiThread(new Thread() {
-                public void run() {
-                    output.setText("Inizio parsing");
-                }
-            });
-            try {
-                InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
-                CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
-                List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-                l=rows.size();
-                for (final CsvRowParser.Row r : rows) {
-                    String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("CODICESCUOLA"), snip = r.get("DESCRIZIONECOMUNE") + ", " +r.get("PROVINCIA") + ", " + r.get("INDIRIZZOSCUOLA");
+                l=rparse.size();
+                for (final CsvRowParser.Row r : rparse) {
+                    String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("CODICESCUOLA"), snip = r.get("DESCRIZIONECOMUNE") + ", " + r.get("PROVINCIA") + ", " + r.get("INDIRIZZOSCUOLA");
                     MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
                     mClusterManager.addItem(offsetItem);
                     x++;
-                    f=(100*x)/l;
-                    if (f==0||f==15||f==25||f==35||f==50||f==65||f==75||f==90){
-                        publishProgress(f);}
+                    f = (100 * x) / l;
+                    if (f == 0 || f == 15 || f == 25 || f == 35 || f == 50 || f == 65 || f == 75 || f == 90) {
+                        publishProgress(f);
+                    }
                 }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
             return null;
         }
 
@@ -657,6 +647,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(Void a) {
             output.setText("Fine!");
+            stopLockTask();
         }
 
     }
@@ -664,9 +655,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ClusterManager<MyItem> mClusterManager;
 
     private void setUpClusterer(Context context) {
-        // Position the map.
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 1));
-
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<MyItem>(context, gMap);
@@ -744,6 +732,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
        // intent.putExtra("nomeScuola","booh");
         //startActivity(intent);
     }
+
 
 
 }
