@@ -1,7 +1,9 @@
 package com.example.alessio.safeschool;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -53,6 +55,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -78,7 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
-
+    private List<Marker> mMarkerArray = new ArrayList<Marker>();
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
     // alcune costanti
@@ -91,7 +94,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Pulsanti in sovraimpressione gestiti da questa app. Da non confondere con i pulsanti che GoogleMaps mette in sovraimpressione e che non
      * fanno parte degli oggetti gestiti manualmente dal codice.
      */
-    protected ImageButton button_here, button_car;
+    //protected ImageButton button_here, button_car;
     /**
      * API per i servizi di localizzazione.
      */
@@ -120,14 +123,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         // trova gli oggetti che rappresentano i bottoni e li salva come campi d'istanza
-        button_here = findViewById(R.id.button_here);
-        button_car = findViewById(R.id.button_car);
+        //button_here = findViewById(R.id.button_here);
+        //button_car = findViewById(R.id.button_car);
 
         // API per i servizi di localizzazione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -137,7 +140,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         // quando viene premito il pulsante HERE viene eseguito questo codice
-        button_here.setOnClickListener(new View.OnClickListener() {
+        /*button_here.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "here button clicked");
@@ -155,7 +158,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } else
                     Log.d(TAG, "no current position available");
             }
-        });
+        });*/
 
 
 
@@ -299,6 +302,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.navigation_home:
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
+            case R.id.tv:
+
            /* case R.id.tv:
                 demo("TREVISO");
                 break;
@@ -306,6 +311,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return false;
     }
+
+
 
     // onConnection callbacks
     //
@@ -386,7 +393,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapClick(LatLng latLng) {
         // nascondi il pulsante della navigazione (non quello di google maps, ma il nostro pulsante custom)
-        button_car.setVisibility(View.INVISIBLE);
+        //button_car.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -408,7 +415,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onCameraMoveStarted(int reason) {
-        setHereButtonVisibility();
+        //setHereButtonVisibility();
     }
 
     /**
@@ -417,7 +424,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * impostanta nelle preferenze.
      * Questo comportamento è dimostrativo e non è necessario tenerlo quando si sviluppa un'applicazione modificando questo template.
      */
-    public void setHereButtonVisibility() {
+    /*public void setHereButtonVisibility() {
         if (gMap != null) {
             if (gMap.getCameraPosition().zoom < SettingsActivity.getZoomThreshold(this)) {
                 button_here.setVisibility(View.INVISIBLE);
@@ -425,7 +432,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 button_here.setVisibility(View.VISIBLE);
             }
         }
-    }
+    }*/
 
     /**
      * Questo metodo è molto importante: esso viene invocato dal sistema quando la mappa è pronta.
@@ -483,7 +490,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d(TAG, "applying map settings");
             gMap.setMapType(SettingsActivity.getMapStyle(this));
         }
-        setHereButtonVisibility();
+        //setHereButtonVisibility();
     }
 
     /**
@@ -517,8 +524,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onMarkerClick(final Marker marker) {
         marker.showInfoWindow();
-        button_car.setVisibility(View.VISIBLE);
-        button_car.setOnClickListener(new View.OnClickListener() {
+        //button_car.setVisibility(View.VISIBLE);
+        /*button_car.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Snackbar.make(v, R.string.msg_button_car, Snackbar.LENGTH_SHORT);
@@ -526,7 +533,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     navigate(currentPosition, marker.getPosition());
                 }
             }
-        });
+        });*/
         return false;
     }
 
@@ -641,7 +648,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //@Override
         protected void onProgressUpdate(Integer ... a){
             output.setText("Markers:"+a[0]+"% completato");
-
         }
 
         @Override
@@ -728,9 +734,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
-        //Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
-       // intent.putExtra("nomeScuola","booh");
-        //startActivity(intent);
+        Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
+        intent.putExtra("Codicescuola",marker.getTitle());
+        startActivity(intent);
     }
 
 

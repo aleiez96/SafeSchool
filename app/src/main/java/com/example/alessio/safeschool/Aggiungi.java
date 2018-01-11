@@ -165,16 +165,16 @@ public class Aggiungi extends AppCompatActivity {
             case R.id.action_search:
                 return true;
             case R.id.checkable_item1:
-                Toast.makeText(this, "filtro regione", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Filtro regione", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.checkable_item2:
-                Toast.makeText(this, "filtro provincia", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Filtro provincia", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.p1:
-                Toast.makeText(this, "filtro pericolosità", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Filtro pericolosità", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.p2:
-                Toast.makeText(this, "filtro pericolosità", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Filtro pericolosità", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

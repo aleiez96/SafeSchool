@@ -15,60 +15,64 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Info" />
 
-    <item android:title="filtra">
+    <item
+        android:id="@+id/filtro"
+        android:title="Filtra">
         <menu>
             <group
                 android:id="@+id/checkable_group"
                 android:checkableBehavior="all">
                 <item
                     android:id="@+id/checkable_item1"
-                    android:title="regione"/>
+                    android:title="regione" />
 
-                <item android:title="pericolosità"
-                    android:checkable="false">
+                <item
+                    android:checkable="false"
+                    android:title="pericolosità">
                     <menu>
                         <group
                             android:id="@+id/pericolosità"
                             android:checkableBehavior="all">
                             <item
                                 android:id="@+id/p1"
-                                android:title="1"/>
+                                android:title="1" />
                             <item
                                 android:id="@+id/p2"
-                                android:title="2"/>
+                                android:title="2" />
                         </group>
                     </menu>
                 </item>
-                <item android:title="provincia"
-                    android:checkable="false">
+                <item
+                    android:checkable="false"
+                    android:title="provincia">
                     <menu>
                         <group
                             android:id="@+id/checkable_item2"
                             android:checkableBehavior="all">
                             <item
                                 android:id="@+id/tv"
-                                android:title="TREVISO"
-                                android:text="TREVISO"/>
+                                android:text="TREVISO"
+                                android:title="TREVISO" />
                             <item
                                 android:id="@+id/ve"
-                                android:title="VENEZIA"
-                                android:text="VENEZIA"/>
+                                android:text="VENEZIA"
+                                android:title="VENEZIA" />
                             <item
                                 android:id="@+id/vr"
-                                android:title="VERONA"
-                                android:text="VERONA"/>
+                                android:text="VERONA"
+                                android:title="VERONA" />
                             <item
                                 android:id="@+id/vi"
-                                android:title="VICENZA"
-                                android:text="VICENZA"/>
+                                android:text="VICENZA"
+                                android:title="VICENZA" />
                             <item
                                 android:id="@+id/bl"
-                                android:title="BELLUNO"
-                                android:text="BELLUNO"/>
+                                android:text="BELLUNO"
+                                android:title="BELLUNO" />
                             <item
                                 android:id="@+id/rg"
-                                android:title="ROVIGO"
-                                android:text="ROVIGO"/>
+                                android:text="ROVIGO"
+                                android:title="ROVIGO" />
                         </group>
                     </menu>
                 </item>
