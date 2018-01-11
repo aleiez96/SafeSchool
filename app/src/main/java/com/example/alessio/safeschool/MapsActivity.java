@@ -2,6 +2,7 @@ package com.example.alessio.safeschool;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -51,6 +54,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
@@ -74,6 +78,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
+    static List<CsvRowParser.Row> rows;
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
     // alcune costanti
@@ -115,6 +120,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
 
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -605,16 +611,65 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+
+    public class myAsync extends AsyncTask<Void,Integer,Void>{
+        TextView output = (TextView) findViewById(R.id.textView6);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            int l,x=0,f;
+            runOnUiThread(new Thread() {
+                public void run() {
+                    output.setText("Inizio parsing");
+                }
+            });
+            try {
+                InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
+                CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
+                List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                l=rows.size();
+                for (final CsvRowParser.Row r : rows) {
+                    String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("CODICESCUOLA"), snip = r.get("DESCRIZIONECOMUNE") + ", " +r.get("PROVINCIA") + ", " + r.get("INDIRIZZOSCUOLA");
+                    MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
+                    mClusterManager.addItem(offsetItem);
+                    x++;
+                    f=(100*x)/l;
+                    if (f==0||f==15||f==25||f==35||f==50||f==65||f==75||f==90){
+                        publishProgress(f);}
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        //@Override
+        protected void onProgressUpdate(Integer ... a){
+            output.setText("Markers:"+a[0]+"% completato");
+
+        }
+
+        @Override
+        protected void onPostExecute(Void a) {
+            output.setText("Fine!");
+        }
+
+    }
     // Declare a variable for the cluster manager.
     private ClusterManager<MyItem> mClusterManager;
 
-    private void setUpClusterer() {
+    private void setUpClusterer(Context context) {
         // Position the map.
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 1));
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MyItem>(this, gMap);
+        mClusterManager = new ClusterManager<MyItem>(context, gMap);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
@@ -622,10 +677,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         gMap.setOnMarkerClickListener(mClusterManager);
 
         // Add cluster items (markers) to the cluster manager.
-        addItems();
+        myAsync mTask = new myAsync();
+        mTask.execute();
     }
 
-    private void addItems() {
+    /*private void addItems() {
         try {
             InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
             CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
@@ -635,17 +691,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("CODICESCUOLA"), snip = r.get("DESCRIZIONECOMUNE") + ", " +r.get("PROVINCIA") + ", " + r.get("INDIRIZZOSCUOLA");
                 MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
                 mClusterManager.addItem(offsetItem);
+
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     // demo code
     @Nullable
     private Collection<Marker> markers;
     private void demo() {
-        setUpClusterer();
+        setUpClusterer(getApplicationContext());
         /*try {
             InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
             CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
@@ -687,4 +744,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
        // intent.putExtra("nomeScuola","booh");
         //startActivity(intent);
     }
+
+
 }
