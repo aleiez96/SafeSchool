@@ -39,7 +39,7 @@ public class Benvenuto extends AppCompatActivity{
             throw mSQLException;
         }
 
-        String query = "select * from scuole";
+        String query = "select * from scuole_veneto";
         Cursor cursor = dbm.query(query, null);
 
         while(cursor.moveToNext()) {
@@ -53,6 +53,8 @@ public class Benvenuto extends AppCompatActivity{
             index = cursor.getColumnIndexOrThrow("provincia");
             String provincia = cursor.getString(index);
 
+            index = cursor.getColumnIndexOrThrow("longitudine");
+            String longitudine = cursor.getString(index);
             //... do something with data
         }
         /*******************************************/
