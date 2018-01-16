@@ -1,6 +1,7 @@
 package com.example.alessio.safeschool;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,9 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.List;
+
+import it.unive.dais.cevid.datadroid.lib.parser.CsvRowParser;
+
 
 public class ScrollingActivityScuola extends AppCompatActivity {
-
     boolean check=true;
     static String nome;
     @Override
@@ -20,14 +24,32 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_scuola);
         Intent intent = getIntent();
-        String dato1 = intent.getStringExtra("nome");
-        String dato2 = intent.getStringExtra("id");
+        String dato1 = intent.getStringExtra("Codicescuola");
         setTitle(dato1);
+        String query = "select * from scuole_veneto";
+        Cursor cursor = MapsActivity.dbm.query(query, null);
+
+        while(cursor.moveToNext()) {
+            int index;
+            index = cursor.getColumnIndexOrThrow("id");
+            String id = cursor.getString(index);
+            if (id.equals(dato1)){
+                index = cursor.getColumnIndexOrThrow("istituto_rif_nome");
+                nome = cursor.getString(index);
+                index = cursor.getColumnIndexOrThrow("nome");
+                nome = nome + " - " + cursor.getString(index);
+                index = cursor.getColumnIndexOrThrow("indirizzo");
+                nome = nome + " | " + cursor.getString(index);
+                index = cursor.getColumnIndexOrThrow("provincia");
+                nome = nome + ", " + cursor.getString(index);
+                break;}
+
+        }
 
 
         TextView testo = findViewById(R.id.textView1);
-        testo.setText(dato1+" - "+dato2);
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        testo.setText(nome);
+        final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
