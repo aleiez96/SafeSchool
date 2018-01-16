@@ -11,10 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.List;
-
-import it.unive.dais.cevid.datadroid.lib.parser.CsvRowParser;
-
 
 public class ScrollingActivityScuola extends AppCompatActivity {
     boolean check=true;
@@ -25,7 +21,10 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         setContentView(R.layout.activity_scrolling_scuola);
         Intent intent = getIntent();
         String dato1 = intent.getStringExtra("Codicescuola");
+        String dato2 = intent.getStringExtra("nome");
+        String dato3 = intent.getStringExtra("id");
         setTitle(dato1);
+
         String query = "select * from scuole_veneto";
         Cursor cursor = MapsActivity.dbm.query(query, null);
 
