@@ -629,6 +629,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
         intent.putExtra("Codicescuola",marker.getTitle());
+        Log.i("id",marker.getTitle());
         startActivity(intent);
     }
 

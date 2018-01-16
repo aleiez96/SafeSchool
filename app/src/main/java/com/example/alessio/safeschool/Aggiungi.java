@@ -145,8 +145,9 @@ public class Aggiungi extends AppCompatActivity {
                 Intent intent=new Intent(getApplicationContext(),
                         ScrollingActivityScuola.class
                 );
-                intent.putExtra("nome",lstSource.get(position).getNome());
-                intent.putExtra("id",lstSource.get(position).getId());
+
+                intent.putExtra("Codicescuola",lstSource.get(position).getId());
+                Log.i("id",lstSource.get(position).getId());
                 startActivity(intent);
             }
         });

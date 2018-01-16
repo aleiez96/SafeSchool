@@ -2,6 +2,8 @@ package com.example.alessio.safeschool;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,22 +13,41 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 
 public class ScrollingActivityScuola extends AppCompatActivity {
     boolean check=true;
     static String nome;
+    static DataBaseHelper mDBHelper;
+    static DbManager dbm;
+    static SQLiteDatabase mDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_scuola);
         Intent intent = getIntent();
         String dato1 = intent.getStringExtra("Codicescuola");
-        String dato2 = intent.getStringExtra("nome");
-        String dato3 = intent.getStringExtra("id");
         setTitle(dato1);
 
+
+        mDBHelper = new DataBaseHelper(this);
+        dbm = new DbManager(this);
+
+        try {
+            mDBHelper.updateDataBase();
+        } catch (IOException mIOException) {
+            throw new Error("UnableToUpdateDatabase");
+        }
+
+        try {
+            mDb = mDBHelper.getWritableDatabase();
+        } catch (SQLException mSQLException) {
+            throw mSQLException;
+        }
+
         String query = "select * from scuole_veneto";
-        Cursor cursor = MapsActivity.dbm.query(query, null);
+        Cursor cursor = /*MapsActivity.*/dbm.query(query, null);
 
         while(cursor.moveToNext()) {
             int index;
@@ -34,13 +55,13 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             String id = cursor.getString(index);
             if (id.equals(dato1)){
                 index = cursor.getColumnIndexOrThrow("istituto_rif_nome");
-                nome = cursor.getString(index);
+                nome = "istituto riferimento: "+cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("nome");
-                nome = nome + " - " + cursor.getString(index);
+                nome = nome + "\n nome scuola: " + cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("indirizzo");
-                nome = nome + " | " + cursor.getString(index);
+                nome = nome + "\n indirizzo: " + cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("provincia");
-                nome = nome + ", " + cursor.getString(index);
+                nome = nome + "\n provincia: " + cursor.getString(index);
                 break;}
 
         }
