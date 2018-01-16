@@ -10,13 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.List;
-
-import it.unive.dais.cevid.datadroid.lib.parser.CsvRowParser;
-
 
 public class ScrollingActivityScuola extends AppCompatActivity {
-    static List<CsvRowParser.Row> prow = Home.rows;
+
     boolean check=true;
     static String nome;
     @Override
@@ -24,17 +20,13 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_scuola);
         Intent intent = getIntent();
-        String dato1 = intent.getStringExtra("Codicescuola");
+        String dato1 = intent.getStringExtra("nome");
+        String dato2 = intent.getStringExtra("id");
         setTitle(dato1);
-        for (final CsvRowParser.Row r : prow) {
-            if (r.get("CODICESCUOLA").equals(dato1)){
-                nome=r.get("DENOMINAZIONEISTITUTORIFERIMENTO")+" - "+r.get("DENOMINAZIONESCUOLA");
-                break;
-            }
-        }
+
 
         TextView testo = findViewById(R.id.textView1);
-        testo.setText(nome);
+        testo.setText(dato1+" - "+dato2);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
