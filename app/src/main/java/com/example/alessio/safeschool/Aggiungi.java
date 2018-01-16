@@ -21,12 +21,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.alessio.safeschool.MapsActivity.mDBHelper;
+
 public class Aggiungi extends AppCompatActivity {
 
 
-    private DataBaseHelper mDBHelper;
-    private DbManager dbm;
-    private SQLiteDatabase mDb;
 
     MaterialSearchView searchView;
     ListView lstView;
@@ -201,23 +200,10 @@ public class Aggiungi extends AppCompatActivity {
 
     public void aggiungi(){
         /********************* TEST DB **********************/
-        mDBHelper = new DataBaseHelper(this);
-        dbm = new DbManager(this);
 
-        try {
-            mDBHelper.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
-        }
-
-        try {
-            mDb = mDBHelper.getWritableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
 
         String query = "select * from scuole_veneto";
-        Cursor cursor = dbm.query(query, null);
+        Cursor cursor = MapsActivity.dbm.query(query, null);
 
         while(cursor.moveToNext()) {
             int index;

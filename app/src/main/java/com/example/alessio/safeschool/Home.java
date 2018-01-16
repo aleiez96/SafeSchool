@@ -2,6 +2,7 @@ package com.example.alessio.safeschool;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,6 +25,8 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ConstraintLayout sfondo = findViewById(R.id.sfondo);
+        sfondo.setBackgroundColor(0xFF00FF00);
         Button b1 = findViewById(R.id.preferiti);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +49,6 @@ public class Home extends AppCompatActivity {
             }
         });
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
