@@ -1,9 +1,6 @@
 package com.example.alessio.safeschool;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,25 +10,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.IOException;
+import java.util.List;
+
+import it.unive.dais.cevid.datadroid.lib.parser.CsvRowParser;
 
 
 public class ScrollingActivityScuola extends AppCompatActivity {
-
+    static List<CsvRowParser.Row> prow = Home.rows;
     boolean check=true;
-    Scuole s;
-
-    private DataBaseHelper mDBHelper;
-    private DbManager dbm;
-    private SQLiteDatabase mDb;
+    static String nome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_scuola);
         Intent intent = getIntent();
-        String dato1 = intent.getStringExtra("nome");
-        String dato2 = intent.getStringExtra("id");
-       /* String dato1 = intent.getStringExtra("Codicescuola");
+        String dato1 = intent.getStringExtra("Codicescuola");
         setTitle(dato1);
         for (final CsvRowParser.Row r : prow) {
             if (r.get("CODICESCUOLA").equals(dato1)){
@@ -39,12 +32,9 @@ public class ScrollingActivityScuola extends AppCompatActivity {
                 break;
             }
         }
-        */
-        s=aggiungi(dato2);
-      //  Log.i("sito",s.sito);
+
         TextView testo = findViewById(R.id.textView1);
-        testo.setText(dato1+" - "+dato2);
-/*"\n"+"indirizzo"+s.indirizzo+"\nindirizzo email"+s.indirizzo_email*/
+        testo.setText(nome);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,45 +83,5 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         }
     }
 
-    public Scuole aggiungi(String id){
-        /********************* TEST DB **********************/
-        mDBHelper = new DataBaseHelper(this);
-        dbm = new DbManager(this);
-
-        try {
-            mDBHelper.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
-        }
-
-        try {
-            mDb = mDBHelper.getWritableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
-
-        String query = "select * from scuole_veneto where id='"+id+"'";
-        Cursor cursor = dbm.query(query, null);
-
-        while(cursor.moveToNext()) {
-            int index;
-
-
-            index = cursor.getColumnIndexOrThrow("indirizzo");
-            String indirizzo= cursor.getString(index);
-
-            index = cursor.getColumnIndexOrThrow("indirizzo_email");
-            String indirizzo_email = cursor.getString(index);
-
-            index = cursor.getColumnIndexOrThrow("sito_web");
-            String sito = cursor.getString(index);
-            //... do something with data
-            Scuole s=new Scuole(sito,indirizzo,indirizzo_email);
-
-
-        }
-        /*******************************************/
-        return s;
-    }
 
 }
