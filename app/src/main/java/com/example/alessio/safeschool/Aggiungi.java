@@ -1,10 +1,12 @@
 package com.example.alessio.safeschool;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,15 +17,22 @@ import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Aggiungi extends AppCompatActivity {
 
+
+    private DataBaseHelper mDBHelper;
+    private DbManager dbm;
+    private SQLiteDatabase mDb;
+
     MaterialSearchView searchView;
     ListView lstView;
-
-    String[] lstSource = {
+    ArrayList<Scuole> lstSource=new ArrayList<>();
+    ArrayList<String> lstSource2=new ArrayList<>();
+    /*String[] lstSource = {
 
             "Harry",
             "Ron",
@@ -40,7 +49,7 @@ public class Aggiungi extends AppCompatActivity {
             "Eight",
             "Nine",
             "Ten"
-    };
+    };*/
 
 
 
@@ -48,7 +57,7 @@ public class Aggiungi extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aggiungi);
-
+        aggiungi();
        /* Button b1 = (Button)findViewById(R.id.button2);
         b1.setOnClickListener(new View.OnClickListener().OnClickListener() {
             @Override
@@ -67,12 +76,13 @@ public class Aggiungi extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));*/
 
         lstView = (ListView)findViewById(R.id.lstView);
-        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource);
+
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource2);
         lstView.setAdapter(adapter);
 
 
         searchView = (MaterialSearchView)findViewById(R.id.search_view);
-
+        Log.i("nome","ok 1");
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
@@ -83,10 +93,10 @@ public class Aggiungi extends AppCompatActivity {
 
             @Override
             public void onSearchViewClosed() {
-
                 //If closed Search View , lstView will return default
                 lstView = (ListView)findViewById(R.id.lstView);
-                ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource);
+
+                ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource2);
                 lstView.setAdapter(adapter);
 
             }
@@ -102,11 +112,16 @@ public class Aggiungi extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 if(newText != null && !newText.isEmpty()){
+                    String item;
                     List<String> lstFound = new ArrayList<String>();
-                    for(String item:lstSource){
+                    for( int i=0;i<lstSource.size() ;i++){
+                        item=lstSource.get(i).getNome();
+                        Log.i("nome",item);
                         if(item.contains(newText))
                             lstFound.add(item);
+
                     }
 
                     ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstFound);
@@ -115,7 +130,7 @@ public class Aggiungi extends AppCompatActivity {
                 else{
                     //if search text is null
                     //return default
-                    ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource);
+                    ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource2);
                     lstView.setAdapter(adapter);
                 }
 
@@ -130,7 +145,8 @@ public class Aggiungi extends AppCompatActivity {
                 Intent intent=new Intent(getApplicationContext(),
                         ScrollingActivityScuola.class
                 );
-                intent.putExtra("hello","ciao");
+                intent.putExtra("nome",lstSource.get(position).getNome());
+                intent.putExtra("id",lstSource.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -182,5 +198,50 @@ public class Aggiungi extends AppCompatActivity {
     }
 
 
+    public void aggiungi(){
+        /********************* TEST DB **********************/
+        mDBHelper = new DataBaseHelper(this);
+        dbm = new DbManager(this);
+
+        try {
+            mDBHelper.updateDataBase();
+        } catch (IOException mIOException) {
+            throw new Error("UnableToUpdateDatabase");
+        }
+
+        try {
+            mDb = mDBHelper.getWritableDatabase();
+        } catch (SQLException mSQLException) {
+            throw mSQLException;
+        }
+
+        String query = "select * from scuole_veneto";
+        Cursor cursor = dbm.query(query, null);
+
+        while(cursor.moveToNext()) {
+            int index;
+            index = cursor.getColumnIndexOrThrow("id");
+            String id = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("nome");
+            String nome = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("provincia");
+            String provincia = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("longitudine");
+            String longitudine = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("sito_web");
+            String sito = cursor.getString(index);
+            //... do something with data
+            Scuole s=new Scuole(nome,id);
+            lstSource.add(s);
+            lstSource2.add(nome);
+
+
+        }
+        /*******************************************/
+    }
 
 }
