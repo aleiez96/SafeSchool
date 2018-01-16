@@ -20,15 +20,10 @@ import java.util.concurrent.ExecutionException;
 import it.unive.dais.cevid.datadroid.lib.parser.CsvRowParser;
 
 public class Home extends AppCompatActivity {
-    static ProgressBar pb;
-    static List<CsvRowParser.Row> rows;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        myAsyncp mTask = new myAsyncp();
-        mTask.execute();
-        pb = findViewById(R.id.progressBar2);
         Button b1 = findViewById(R.id.preferiti);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,40 +71,6 @@ public class Home extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public class myAsyncp extends AsyncTask<Void,Integer,Void> {
-        TextView output = (TextView) findViewById(R.id.textView7);
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            runOnUiThread(new Thread() {
-                public void run() {
-                    output.setText("Parsing dei dati...");
-                }
-            });
-            try {
-                InputStream is = getResources().openRawResource(R.raw.veneto_sempl);
-                CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
-                rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void a) {
-            output.setText("Fine!");
-            pb.setVisibility(findViewById(R.id.progressBar2).INVISIBLE);
-            output.setVisibility(findViewById(R.id.textView7).INVISIBLE);
-        }
-
     }
 
 }

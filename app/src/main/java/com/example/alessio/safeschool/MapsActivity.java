@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -51,6 +54,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -81,7 +85,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
-    private List<Marker> mMarkerArray = new ArrayList<Marker>();
+    static DataBaseHelper mDBHelper;
+    static DbManager dbm;
+    static SQLiteDatabase mDb;
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
     // alcune costanti
@@ -91,11 +97,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     protected GoogleMap gMap;
     /**
-     * Pulsanti in sovraimpressione gestiti da questa app. Da non confondere con i pulsanti che GoogleMaps mette in sovraimpressione e che non
-     * fanno parte degli oggetti gestiti manualmente dal codice.
-     */
-    //protected ImageButton button_here, button_car;
-    /**
      * API per i servizi di localizzazione.
      */
     protected FusedLocationProviderClient fusedLocationClient;
@@ -104,13 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Nullable
     protected LatLng currentPosition = null;
-    /**
-     * Il marker che viene creato premendo il pulsante button_here (cioè quello dell'app, non quello di Google Maps).
-     * E' utile avere un campo d'istanza che tiene il puntatore a questo marker perché così è possibile rimuoverlo se necessario.
-     * E' null quando non è stato creato il marker, cioè prima che venga premuto il pulsante HERE la prima volta.
-     */
-    @Nullable
-    protected Marker hereMarker = null;
+
 
     /**
      * Questo metodo viene invocato quando viene inizializzata questa activity.
@@ -125,6 +120,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mDBHelper = new DataBaseHelper(MapsActivity.this);
+        dbm = new DbManager(MapsActivity.this);
+
+        try {
+            mDBHelper.updateDataBase();
+        } catch (IOException mIOException) {
+            throw new Error("UnableToUpdateDatabase");
+        }
+
+        try {
+            mDb = mDBHelper.getWritableDatabase();
+        } catch (SQLException mSQLException) {
+            throw mSQLException;
+        }
+
+
+
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -138,52 +150,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // inizializza la mappa asincronamente
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        // quando viene premito il pulsante HERE viene eseguito questo codice
-        /*button_here.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "here button clicked");
-                gpsCheck();
-                updateCurrentPosition();
-                if (hereMarker != null) hereMarker.remove();
-                if (currentPosition != null) {
-                    MarkerOptions opts = new MarkerOptions();
-                    opts.position(currentPosition);
-                    opts.title(getString(R.string.marker_title));
-                    opts.snippet(String.format("lat: %g\nlng: %g", currentPosition.latitude, currentPosition.longitude));
-                    hereMarker = gMap.addMarker(opts);
-                    if (gMap != null)
-                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, getResources().getInteger(R.integer.zoomFactor_button_here)));
-                } else
-                    Log.d(TAG, "no current position available");
-            }
-        });*/
-
-
-
-/*
-            gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-
-                InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
-                CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";" ,new ProgressBarManager(MapsActivity, ProgressBar));
-
-                List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    Intent intent = new Intent(getApplicationContext() ,ScrollingActivityScuola.class);
-                   for (final CsvRowParser.Row r : rows) {
-                        if(r.get("CODICESCUOLA").equals(marker.getTitle())) {
-                            intent.putExtra("nomeScuola", r.get("DENOMINAZIONESCUOLA"));
-                        }
-                    }
-                    startActivity(intent);
-
-
-                }
-            });
-
-*/
     }
 
 
@@ -392,8 +358,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapClick(LatLng latLng) {
-        // nascondi il pulsante della navigazione (non quello di google maps, ma il nostro pulsante custom)
-        //button_car.setVisibility(View.INVISIBLE);
+
     }
 
     /**
@@ -415,7 +380,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onCameraMoveStarted(int reason) {
-        //setHereButtonVisibility();
+
     }
 
     /**
@@ -478,7 +443,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         applyMapSettings();
 
-        demo();
+        setUpClusterer(getApplicationContext());
         gMap.setOnInfoWindowClickListener(this);
     }
 
@@ -490,7 +455,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d(TAG, "applying map settings");
             gMap.setMapType(SettingsActivity.getMapStyle(this));
         }
-        //setHereButtonVisibility();
     }
 
     /**
@@ -524,16 +488,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onMarkerClick(final Marker marker) {
         marker.showInfoWindow();
-        //button_car.setVisibility(View.VISIBLE);
-        /*button_car.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, R.string.msg_button_car, Snackbar.LENGTH_SHORT);
-                if (currentPosition != null) {
-                    navigate(currentPosition, marker.getPosition());
-                }
-            }
-        });*/
         return false;
     }
 
@@ -620,7 +574,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public class myAsync extends AsyncTask<Void,Integer,Void>{
-        TextView output = (TextView) findViewById(R.id.textView6);
 
         @Override
         protected void onPreExecute() {
@@ -629,30 +582,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected Void doInBackground(Void... voids) {
-            List<CsvRowParser.Row> rparse= Home.rows;
-            int l,x=0,f;
-                l=rparse.size();
-                for (final CsvRowParser.Row r : rparse) {
-                    String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("CODICESCUOLA"), snip = r.get("DESCRIZIONECOMUNE") + ", " + r.get("PROVINCIA") + ", " + r.get("INDIRIZZOSCUOLA");
-                    MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
-                    mClusterManager.addItem(offsetItem);
-                    x++;
-                    f = (100 * x) / l;
-                    if (f == 0 || f == 15 || f == 25 || f == 35 || f == 50 || f == 65 || f == 75 || f == 90) {
-                        publishProgress(f);
-                    }
-                }
+            String query = "select * from scuole_veneto";
+            Cursor cursor = dbm.query(query, null);
+
+            while(cursor.moveToNext()) {
+                int index;
+                index = cursor.getColumnIndexOrThrow("id");
+                String den = cursor.getString(index);
+
+                index = cursor.getColumnIndexOrThrow("provincia");
+                String snip = cursor.getString(index);
+
+                index = cursor.getColumnIndexOrThrow("latitudine");
+                String lat = cursor.getString(index);
+
+                index = cursor.getColumnIndexOrThrow("longitudine");
+                String lng = cursor.getString(index);
+
+                MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
+                mClusterManager.addItem(offsetItem);
+            }
             return null;
         }
 
         //@Override
         protected void onProgressUpdate(Integer ... a){
-            output.setText("Markers:"+a[0]+"% completato");
+            //output.setText("Markers:"+a[0]+"% completato");
         }
 
         @Override
         protected void onPostExecute(Void a) {
-            output.setText("Fine!");
+            //output.setText("Fine!");
             stopLockTask();
         }
 
@@ -673,61 +633,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Add cluster items (markers) to the cluster manager.
         myAsync mTask = new myAsync();
         mTask.execute();
-    }
-
-    /*private void addItems() {
-        try {
-            InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
-            CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
-            List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-            List<MapItem> l = new ArrayList<>();
-            for (final CsvRowParser.Row r : rows) {
-                String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE"), den = r.get("CODICESCUOLA"), snip = r.get("DESCRIZIONECOMUNE") + ", " +r.get("PROVINCIA") + ", " + r.get("INDIRIZZOSCUOLA");
-                MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
-                mClusterManager.addItem(offsetItem);
-
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    // demo code
-    @Nullable
-    private Collection<Marker> markers;
-    private void demo() {
-        setUpClusterer(getApplicationContext());
-        /*try {
-            InputStream is = getResources().openRawResource(R.raw.veneto_definitivo);
-            CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
-            List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-            List<MapItem> l = new ArrayList<>();
-            for (final CsvRowParser.Row r : rows) {
-               // if(r.get("PROVINCIA").equals(provincia)){
-                l.add(new MapItem() {
-
-                    @Override
-                    public LatLng getPosition() {
-                        String lat = r.get("LATITUDINE"), lng = r.get("LONGITUDINE");
-                        return new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-                    }
-
-                    @Override
-                    public String getTitle() {
-                        return r.get("CODICESCUOLA");
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return (r.get("DESCRIZIONECOMUNE") + ", " + r.get("PROVINCIA")+", "+r.get("INDIRIZZOSCUOLA"));
-                    }
-                });
-            }
-         //   }
-            markers = putMarkersFromMapItems(l);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }*/
     }
 
 
