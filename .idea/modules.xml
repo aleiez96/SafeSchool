@@ -3,11 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SafeSchool.iml" filepath="$PROJECT_DIR$/SafeSchool.iml" />
-      <module fileurl="file://C:\progetti\SafeSchool\SafeSchool.iml" filepath="C:\progetti\SafeSchool\SafeSchool.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\progetti\SafeSchool\app\app.iml" filepath="C:\progetti\SafeSchool\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
-      <module fileurl="file://C:\progetti\SafeSchool\lib\lib.iml" filepath="C:\progetti\SafeSchool\lib\lib.iml" />
     </modules>
   </component>
 </project>

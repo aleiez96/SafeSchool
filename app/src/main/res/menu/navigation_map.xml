@@ -24,11 +24,11 @@
                 android:checkableBehavior="all">
                 <item
                     android:id="@+id/checkable_item1"
-                    android:title="regione" />
+                    android:title="Regione" />
 
                 <item
                     android:checkable="false"
-                    android:title="pericolosità">
+                    android:title="Pericolosità">
                     <menu>
                         <group
                             android:id="@+id/pericolosità"
@@ -44,7 +44,7 @@
                 </item>
                 <item
                     android:checkable="false"
-                    android:title="provincia">
+                    android:title="Provincia">
                     <menu>
                         <group
                             android:id="@+id/checkable_item2"
@@ -53,6 +53,10 @@
                                 android:id="@+id/tv"
                                 android:text="TREVISO"
                                 android:title="TREVISO" />
+                            <item
+                                android:id="@+id/pd"
+                                android:text="PADOVA"
+                                android:title="PADOVA" />
                             <item
                                 android:id="@+id/ve"
                                 android:text="VENEZIA"

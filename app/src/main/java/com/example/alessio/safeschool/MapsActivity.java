@@ -43,18 +43,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
-import it.unive.dais.cevid.datadroid.lib.util.MapItem;
 
 /**
  * Questa classe è la componente principale del toolkit: fornisce servizi primari per un'app basata su Google Maps, tra cui localizzazione, pulsanti
@@ -73,6 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
+    static ArrayList<String> regioni = new ArrayList<>();
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
     static SQLiteDatabase mDb;
@@ -127,10 +122,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        // trova gli oggetti che rappresentano i bottoni e li salva come campi d'istanza
-        //button_here = findViewById(R.id.button_here);
-        //button_car = findViewById(R.id.button_car);
 
         // API per i servizi di localizzazione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -257,13 +248,172 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
             case R.id.tv:
-
-           /* case R.id.tv:
-                demo("TREVISO");
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=regioni.indexOf((Object) item.getTitle());
+                    regioni.remove(i);
+                    query();
+                }
+                else {
+                    item.setChecked(true);
+                    regioni.add((String)item.getTitle());
+                    query();
+                }
                 break;
-*/
+            case R.id.pd:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=regioni.indexOf((Object) item.getTitle());
+                    regioni.remove(i);
+                    query();
+                }
+                else {
+                    item.setChecked(true);
+                    regioni.add((String)item.getTitle());
+                    query();
+                }
+                break;
+            case R.id.vi:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=regioni.indexOf((Object) item.getTitle());
+                    regioni.remove(i);
+                    query();
+                }
+                else {
+                    item.setChecked(true);
+                    regioni.add((String)item.getTitle());
+                    query();
+                }
+                break;
+            case R.id.vr:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=regioni.indexOf((Object) item.getTitle());
+                    regioni.remove(i);
+                    query();
+                }
+                else {
+                    item.setChecked(true);
+                    regioni.add((String)item.getTitle());
+                    query();
+                }
+                break;
+            case R.id.bl:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=regioni.indexOf((Object) item.getTitle());
+                    regioni.remove(i);
+                    query();
+                }
+                else {
+                    item.setChecked(true);
+                    regioni.add((String)item.getTitle());
+                    query();
+                }
+                break;
+            case R.id.rg:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=regioni.indexOf((Object) item.getTitle());
+                    regioni.remove(i);
+                    query();
+                }
+                else {
+                    item.setChecked(true);
+                    regioni.add((String)item.getTitle());
+                    query();
+                }
+                break;
+            case R.id.ve:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=regioni.indexOf((Object) item.getTitle());
+                    regioni.remove(i);
+                    query();
+                }
+                else {
+                    item.setChecked(true);
+                    regioni.add((String)item.getTitle());
+                    query();
+                }
+                break;
         }
         return false;
+    }
+
+
+
+    public void query (){
+        if(regioni.isEmpty()||regioni.size()==7){
+            String query = "select * from scuole_veneto";
+            Cursor cursor = dbm.query(query, null);
+
+            while (cursor.moveToNext()) {
+                int index;
+                index = cursor.getColumnIndexOrThrow("id");
+                String den = cursor.getString(index);
+
+                index = cursor.getColumnIndexOrThrow("provincia");
+                String snip = cursor.getString(index);
+
+                index = cursor.getColumnIndexOrThrow("latitudine");
+                String lat = cursor.getString(index);
+
+                index = cursor.getColumnIndexOrThrow("longitudine");
+                String lng = cursor.getString(index);
+
+                MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
+                mClusterManager.addItem(offsetItem);
+            }
+        }
+        else{
+            for (String regione: regioni) {
+                String query = "select * from scuole_veneto where provincia=?";
+                Cursor cursor = dbm.query(query, new String[]{regione});
+
+                while (cursor.moveToNext()) {
+                    int index;
+                    index = cursor.getColumnIndexOrThrow("id");
+                    String den = cursor.getString(index);
+
+                    index = cursor.getColumnIndexOrThrow("provincia");
+                    String snip = cursor.getString(index);
+
+                    index = cursor.getColumnIndexOrThrow("latitudine");
+                    String lat = cursor.getString(index);
+
+                    index = cursor.getColumnIndexOrThrow("longitudine");
+                    String lng = cursor.getString(index);
+
+                    MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
+                    mClusterManager.addItem(offsetItem);
+                }
+
+            }
+
+        }
     }
 
 
@@ -479,45 +629,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
-    /**
-     * Metodo di utilità che permette di posizionare rapidamente sulla mappa una lista di MapItem.
-     * Attenzione: l'oggetto gMap deve essere inizializzato, questo metodo va pertanto chiamato preferibilmente dalla
-     * callback onMapReady().
-     * @param l la lista di oggetti di tipo I tale che I sia sottotipo di MapItem.
-     * @param <I> sottotipo di MapItem.
-     * @return ritorna la collection di oggetti Marker aggiunti alla mappa.
-     */
-    @NonNull
-    protected <I extends MapItem> Collection<Marker> putMarkersFromMapItems(List<I> l) {
-        Collection<Marker> r = new ArrayList<>();
-        for (MapItem i : l) {
-            MarkerOptions opts = new MarkerOptions().title(i.getTitle()).position(i.getPosition()).snippet(i.getDescription());
-            r.add(gMap.addMarker(opts));
-        }
-        return r;
-    }
-
-    /**
-     * Metodo proprietario di utilità per popolare la mappa con i dati provenienti da un parser.
-     * Si tratta di un metodo che può essere usato direttamente oppure può fungere da esempio per come
-     * utilizzare i parser con informazioni geolocalizzate.
-     *
-     * @param parser un parser che produca sottotipi di MapItem, con qualunque generic Progress o Input
-     * @param <I>    parametro di tipo che estende MapItem.
-     * @return ritorna una collection di marker se tutto va bene; null altrimenti.
-     */
-    @Nullable
-    protected <I extends MapItem> Collection<Marker> putMarkersFromData(@NonNull AsyncParser<I, ?> parser) {
-        try {
-            List<I> l = parser.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-            Log.i(TAG, String.format("parsed %d lines", l.size()));
-            return putMarkersFromMapItems(l);
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, String.format("exception caught while parsing: %s", e));
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * Controlla lo stato del GPS e dei servizi di localizzazione, comportandosi di conseguenza.

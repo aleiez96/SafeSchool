@@ -55,7 +55,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             String id = cursor.getString(index);
             if (id.equals(dato1)){
                 index = cursor.getColumnIndexOrThrow("istituto_rif_nome");
-                nome = "istituto riferimento: "+cursor.getString(index);
+                nome = "\nistituto riferimento: "+cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("nome");
                 nome = nome + "\n nome scuola: " + cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("indirizzo");
