@@ -219,7 +219,7 @@ public class Aggiungi extends AppCompatActivity {
 
             index = cursor.getColumnIndexOrThrow("sito_web");
             String sito = cursor.getString(index);
-            //... do something with data
+
             Scuole s=new Scuole(nome,id);
             lstSource.add(s);
             lstSource2.add(nome);
