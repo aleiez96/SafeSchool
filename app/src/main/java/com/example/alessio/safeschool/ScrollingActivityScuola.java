@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,13 +20,15 @@ import java.io.IOException;
 public class ScrollingActivityScuola extends AppCompatActivity {
     boolean check=true;
     static String nome;
+
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
     static SQLiteDatabase mDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling_scuola);
+
         Intent intent = getIntent();
         String dato1 = intent.getStringExtra("Codicescuola");
         setTitle(dato1);
@@ -33,6 +36,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
         mDBHelper = new DataBaseHelper(this);
         dbm = new DbManager(this);
+
 
         try {
             mDBHelper.updateDataBase();
@@ -47,7 +51,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         }
 
         String query = "select * from scuole_veneto";
-        Cursor cursor = /*MapsActivity.*/dbm.query(query, null);
+        Cursor cursor =dbm.query(query, null);
 
         while(cursor.moveToNext()) {
             int index;
@@ -66,8 +70,9 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
         }
 
-
+        Log.i("provaaa",nome);
         TextView testo = findViewById(R.id.textView1);
+
         testo.setText(nome);
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +93,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
                 }
             }
         });
-
+        setContentView(R.layout.activity_scrolling_scuola);
     }
 
 

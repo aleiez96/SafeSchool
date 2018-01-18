@@ -25,32 +25,14 @@ import static com.example.alessio.safeschool.MapsActivity.mDBHelper;
 
 public class Aggiungi extends AppCompatActivity {
 
-    private DataBaseHelper mDBHelper;
-    private  DbManager dbm;
-    private SQLiteDatabase mDb;
+    static DataBaseHelper mDBHelper;
+    static DbManager dbm;
+    static SQLiteDatabase mDb;
+
     MaterialSearchView searchView;
     ListView lstView;
     ArrayList<Scuole> lstSource=new ArrayList<>();
     ArrayList<String> lstSource2=new ArrayList<>();
-    /*String[] lstSource = {
-
-            "Harry",
-            "Ron",
-            "Hermione",
-            "Snape",
-            "Malfoy",
-            "One",
-            "Two",
-            "Three",
-            "Four",
-            "Five",
-            "Six",
-            "Seven",
-            "Eight",
-            "Nine",
-            "Ten"
-    };*/
-
 
 
     @Override
@@ -202,8 +184,9 @@ public class Aggiungi extends AppCompatActivity {
     public void aggiungi(){
         /********************* TEST DB **********************/
 
-        mDBHelper = new DataBaseHelper(Aggiungi.this);
-        dbm = new DbManager(Aggiungi.this);
+        mDBHelper = new DataBaseHelper(this);
+        dbm = new DbManager(this);
+
 
         try {
             mDBHelper.updateDataBase();
@@ -217,9 +200,8 @@ public class Aggiungi extends AppCompatActivity {
             throw mSQLException;
         }
 
-
         String query = "select * from scuole_veneto";
-        Cursor cursor = /*MapsActivity.*/dbm.query(query, null);
+        Cursor cursor = dbm.query(query, null);
 
         while(cursor.moveToNext()) {
             int index;
