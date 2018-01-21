@@ -39,24 +39,63 @@ public class Benvenuto extends AppCompatActivity{
             throw mSQLException;
         }
 
-        String query = "select * from scuole_veneto";
-        Cursor cursor = dbm.query(query, null);
 
-        while(cursor.moveToNext()) {
-            int index;
-            index = cursor.getColumnIndexOrThrow("id");
-            String id = cursor.getString(index);
+        /******************* esempio Scuola ********************/
+        String queryScuole = "select * from scuole_veneto limit 1";
+        Cursor cursor = dbm.query(queryScuole, null);
+        Scuola scuola = new Scuola();
+
+        while(cursor != null && cursor.moveToNext()) {
+            int index = cursor.getColumnIndexOrThrow("id");
+            scuola.setId(cursor.getString(index));
 
             index = cursor.getColumnIndexOrThrow("nome");
-            String nome = cursor.getString(index);
+            scuola.setNome(cursor.getString(index));
 
             index = cursor.getColumnIndexOrThrow("provincia");
-            String provincia = cursor.getString(index);
+            scuola.setProvincia(cursor.getString(index));
 
             index = cursor.getColumnIndexOrThrow("longitudine");
-            String longitudine = cursor.getString(index);
+            scuola.setLongitudine(cursor.getString(index));
             //... do something with data
         }
+
+
+        /**************** esempio Preferito ***************/
+        String queryPreferiti = "select * from preferiti limit 1";
+        Cursor cursor2 = dbm.query(queryPreferiti, null);
+        Preferito preferito = new Preferito();
+
+        while(cursor2 != null && cursor2.moveToNext()) {
+            int index = cursor2.getColumnIndexOrThrow("id_scuola");
+            preferito.setId_scuola(cursor2.getString(index));
+
+            index = cursor2.getColumnIndexOrThrow("data_inserimento");
+            preferito.setData_inserimento(cursor2.getString(index));
+
+            index = cursor2.getColumnIndexOrThrow("descrizione");
+            preferito.setDescrizione(cursor2.getString(index));
+        }
+
+
+        /**************** esempio Vincoli ***************/
+        String queryVincoli = "select * from vincoli where id_scuola='CTPM01000E' and id_edificio='0870330784'";
+        Cursor cursor3 = dbm.query(queryVincoli, null);
+        Vincolo vincolo = new Vincolo();
+
+        while(cursor3 != null && cursor3.moveToNext()) {
+            int index = cursor3.getColumnIndexOrThrow("id_scuola");
+            vincolo.setId_scuola(cursor3.getString(index));
+
+            index = cursor3.getColumnIndexOrThrow("id_edificio");
+            vincolo.setId_edificio(cursor3.getString(index));
+
+            index = cursor3.getColumnIndexOrThrow("vincoli_idrogeologici");
+            vincolo.setVincoli_idrogeologici(cursor3.getString(index));
+
+            // ecc
+        }
+
         /*******************************************/
 
 

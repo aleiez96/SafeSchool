@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.alessio.safeschool.MapsActivity.mDBHelper;
-
 public class Aggiungi extends AppCompatActivity {
 
     static DataBaseHelper mDBHelper;
@@ -31,7 +29,7 @@ public class Aggiungi extends AppCompatActivity {
 
     MaterialSearchView searchView;
     ListView lstView;
-    ArrayList<Scuole> lstSource=new ArrayList<>();
+    ArrayList<Scuola> lstSource=new ArrayList<>();
     ArrayList<String> lstSource2=new ArrayList<>();
 
 
@@ -220,7 +218,7 @@ public class Aggiungi extends AppCompatActivity {
             index = cursor.getColumnIndexOrThrow("sito_web");
             String sito = cursor.getString(index);
 
-            Scuole s=new Scuole(nome,id);
+            Scuola s=new Scuola(nome,id);
             lstSource.add(s);
             lstSource2.add(nome);
 
