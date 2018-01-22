@@ -142,7 +142,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
                     Snackbar.make(view, "Eliminato dai preferiti", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
 
-                    /////////////eliminazione scuola//////////////  DA CONTROLLARE!
+                    /////////////eliminazione scuola//////////////
                     String[] dati={dato1};
                     dbm.delete("preferiti","id_scuola='"+dato1+"'",null);
                     Log.i("cancellato","cancellato");
