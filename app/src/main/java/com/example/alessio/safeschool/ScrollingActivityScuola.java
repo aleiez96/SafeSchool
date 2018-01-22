@@ -1,5 +1,6 @@
 package com.example.alessio.safeschool;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -19,25 +20,30 @@ import java.io.IOException;
 
 
 public class ScrollingActivityScuola extends AppCompatActivity {
-    boolean check=true;
+
+    boolean check/*=true*/;
     static String nome;
+    String dato1;
+    int seq=0;
+
 
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
     static SQLiteDatabase mDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_scrolling_scuola);
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        String dato1 = intent.getStringExtra("Codicescuola");
+        dato1 = intent.getStringExtra("Codicescuola");
         setTitle(dato1);
 
 
+        ////////////dati scuola
         mDBHelper = new DataBaseHelper(this);
         dbm = new DbManager(this);
-
 
         try {
             mDBHelper.updateDataBase();
@@ -71,6 +77,30 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
         }
 
+        //////////controllo se esiste preferito
+        String query2 = "select * from preferiti where id_scuola='"+dato1+"'";
+        Cursor cursor2 =dbm.query(query, null);
+
+        while(cursor.moveToNext()) {
+            int index;
+            index = cursor.getColumnIndexOrThrow("id");
+            String id = cursor.getString(index);
+
+              //  index = cursor.getColumnIndexOrThrow("id_preferiti");
+               // String idpref=cursor.getString(index);
+
+            Log.i("ids",id);
+          //  Log.i("idp",idpref);
+
+
+        }
+
+   /*
+        String max = "select max(id_preferiti) from preferiti";
+        Cursor cursor3 =dbm.query(query, null);
+        seq=Integer.parseInt( cursor3.getString(0))+1;
+*/
+
         Log.i("provaaa",nome);
         TextView testo = findViewById(R.id.textView1);
 
@@ -86,6 +116,18 @@ public class ScrollingActivityScuola extends AppCompatActivity {
                     fab.setImageResource(android.R.drawable.btn_star_big_on);
                     Snackbar.make(view, "Aggiunto ai preferiti", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+
+
+/*
+                        ContentValues values = new ContentValues();
+                        values.put("id_preferiti", String.valueOf(seq)); // Shop Name
+                        values.put("id_scuola", dato1); // Shop Phone Number
+
+                        dbm.insert("preferiti",  values);
+*/
+
+
+
                     check=false;
                 }
                 else {
