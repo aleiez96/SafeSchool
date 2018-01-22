@@ -17,11 +17,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class ScrollingActivityScuola extends AppCompatActivity {
 
-    boolean check/*=true*/;
+    boolean check=true;
     static String nome;
     String dato1;
     int seq=0;
@@ -41,7 +45,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         setTitle(dato1);
 
 
-        ////////////dati scuola
+
         mDBHelper = new DataBaseHelper(this);
         dbm = new DbManager(this);
 
@@ -57,6 +61,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             throw mSQLException;
         }
 
+        ////////////dati scuola//////////////
         String query = "select * from scuole_veneto";
         Cursor cursor =dbm.query(query, null);
 
@@ -77,29 +82,25 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
         }
 
-        //////////controllo se esiste preferito
-        String query2 = "select * from preferiti where id_scuola='"+dato1+"'";
-        Cursor cursor2 =dbm.query(query, null);
+        //////////controllo se esiste preferito////////////////
+        String queryPreferiti = "select * from preferiti where id_scuola='"+dato1+"'";
+        Cursor cursor2 = dbm.query(queryPreferiti, null);
+        Preferito preferito = new Preferito();
 
-        while(cursor.moveToNext()) {
-            int index;
-            index = cursor.getColumnIndexOrThrow("id");
-            String id = cursor.getString(index);
+        while(cursor2 != null && cursor2.moveToNext()) {
+            int index = cursor2.getColumnIndexOrThrow("id_scuola");
+            preferito.setId_scuola(cursor2.getString(index));
 
-              //  index = cursor.getColumnIndexOrThrow("id_preferiti");
-               // String idpref=cursor.getString(index);
+            /*index = cursor2.getColumnIndexOrThrow("data_inserimento");
+            preferito.setData_inserimento(cursor2.getString(index));
 
-            Log.i("ids",id);
-          //  Log.i("idp",idpref);
-
-
+            index = cursor2.getColumnIndexOrThrow("descrizione");
+            preferito.setDescrizione(cursor2.getString(index));*/
+            //check=true;
+            Log.i("pref","ciao");
         }
 
-   /*
-        String max = "select max(id_preferiti) from preferiti";
-        Cursor cursor3 =dbm.query(query, null);
-        seq=Integer.parseInt( cursor3.getString(0))+1;
-*/
+
 
         Log.i("provaaa",nome);
         TextView testo = findViewById(R.id.textView1);
@@ -112,28 +113,41 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (check == true) {
+                String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                Preferito p=new Preferito(dato1,date,"preferito");
+
+                if (check) {
                     fab.setImageResource(android.R.drawable.btn_star_big_on);
-                    Snackbar.make(view, "Aggiunto ai preferiti", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-
-
-/*
-                        ContentValues values = new ContentValues();
-                        values.put("id_preferiti", String.valueOf(seq)); // Shop Name
-                        values.put("id_scuola", dato1); // Shop Phone Number
-
-                        dbm.insert("preferiti",  values);
-*/
-
-
+                    Snackbar.make(view, "Aggiunto ai preferiti", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
                     check=false;
+
+
+                    //////inserimento scuola//////////
+                    ContentValues values = new ContentValues();
+                    values.put("id_scuola",p.getId_scuola() ); // Shop Name
+                    values.put("data_inserimento", p.getData_inserimento()); // Shop Phone Number
+                    values.put("descrizione", p.getDescrizione());
+
+                    dbm.insert("preferiti",  values);
+                    Log.i("premo stella",p.getId_scuola()+p.getData_inserimento());
+
+
+
+
+
                 }
                 else {
                     fab.setImageResource(android.R.drawable.btn_star_big_off);
                     Snackbar.make(view, "Eliminato dai preferiti", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+
+                    /////////////eliminazione scuola//////////////  DA CONTROLLARE!
+                    String[] dati={dato1};
+                    dbm.delete("preferiti","id_scuola='"+dato1+"'",null);
+                    Log.i("cancellato","cancellato");
+
+
                     check=true;
                 }
             }
@@ -149,7 +163,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Take appropriate action for each action item click
+
         Intent intent;
         switch (item.getItemId()) {
             case R.id.tutorial_item:

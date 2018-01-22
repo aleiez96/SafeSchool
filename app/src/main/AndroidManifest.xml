@@ -57,12 +57,14 @@
             android:label="Mappa" />
         <activity
             android:name=".ScrollingActivityScuola"
-            android:label="@string/title_activity_scrolling_scuola" />
+            android:label="@string/title_activity_scrolling_scuola"
+            android:parentActivityName=".pref"/>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".ActivityInfo" />
-        <activity android:name=".pref"></activity>
+        <activity android:name=".pref"
+            android:parentActivityName=".Home"></activity>
     </application>
 
 </manifest>

@@ -127,7 +127,7 @@ public class Aggiungi extends AppCompatActivity {
                 );
 
                 intent.putExtra("Codicescuola",lstSource.get(position).getId());
-                Log.i("id",lstSource.get(position).getId());
+                Log.i("aggiungi activity",lstSource.get(position).getId());
                 startActivity(intent);
             }
         });

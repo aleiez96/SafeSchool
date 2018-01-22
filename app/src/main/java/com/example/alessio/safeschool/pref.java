@@ -5,19 +5,25 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class pref extends AppCompatActivity {
+public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener
+{
 
     ArrayList<String> nameproducts = new ArrayList<String>();
 
@@ -25,10 +31,18 @@ public class pref extends AppCompatActivity {
     private DbManager dbm;
     private SQLiteDatabase mDb;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pref);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+
 
         mDBHelper = new DataBaseHelper(this);
         dbm = new DbManager(this);
@@ -67,6 +81,7 @@ public class pref extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.pref_menu, menu);
+        getMenuInflater().inflate(R.menu.refresh, menu);
         if(nameproducts.size()>=0) {
 
             final ArrayList<String> listp = new ArrayList<String>();
@@ -119,5 +134,26 @@ public class pref extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+    }
+
+
+    @Override
+    public void onRefresh() {
+        Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
+
+        Intent intent=new Intent(getApplicationContext(),
+                pref.class
+        );
+
+        startActivity(intent);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
     }
 }
+
