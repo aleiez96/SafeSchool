@@ -102,9 +102,9 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
 
 
-
         Log.i("provaaa",nome);
         TextView testo = findViewById(R.id.textView1);
+
 
         testo.setText(nome);
 
