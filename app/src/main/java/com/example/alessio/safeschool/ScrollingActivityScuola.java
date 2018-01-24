@@ -28,9 +28,10 @@ import java.util.Date;
 public class ScrollingActivityScuola extends AppCompatActivity {
 
     boolean check=true;
-    static String nome;
+    static String nome, nome1,nome2;
     String dato1;
     Scuola scuola = new Scuola();
+    Vincolo vincolo = new Vincolo();
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
     static SQLiteDatabase mDb;
@@ -100,36 +101,59 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
         String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
         Cursor cursor =dbm.query(query, null);
+        TextView uno = findViewById(R.id.textView13);
+        TextView due = findViewById(R.id.textView14);
+        TextView tre = findViewById(R.id.textView15);
+        TextView quattro = findViewById(R.id.textView16);
+        quattro.setText("COD."+dato1);
         while(cursor.moveToNext()) {
             int index;
             index = cursor.getColumnIndexOrThrow("id");
+            scuola.setId(cursor.getString(index));
             String id = cursor.getString(index);
             if (id.equals(dato1)){
-                index = cursor.getColumnIndexOrThrow("istituto_rif_nome");
-                nome = "\nistituto riferimento: "+cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("nome");
-                scuola.setNome(cursor.getString(index));
-                nome = nome + "\n nome scuola: " + cursor.getString(index);
+                scuola.setNome(cursor.getString(index).replaceAll("\\s+"," "));
+                index = cursor.getColumnIndexOrThrow("istituto_rif_nome");
+                nome=cursor.getString(index);
+                nome=nome.replaceAll("\\s+"," ");
+                index = cursor.getColumnIndexOrThrow("istituto_rif_codice");
+                nome = nome + "\n(" + cursor.getString(index)+")";
+                uno.setText(nome);
+                nome=null;
                 index = cursor.getColumnIndexOrThrow("indirizzo");
-                nome = nome + "\n indirizzo: " + cursor.getString(index);
+                nome = cursor.getString(index);
+                index = cursor.getColumnIndexOrThrow("cap");
+                nome = nome + ", " + cursor.getString(index);
+                index = cursor.getColumnIndexOrThrow("comune_nome");
+                nome1 = cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("provincia");
-                nome = nome + "\n provincia: " + cursor.getString(index);
                 scuola.setProvincia(cursor.getString(index));
+                nome1 = nome1 + ", " + cursor.getString(index);
+                index = cursor.getColumnIndexOrThrow("regione");
+                nome1 = nome1 + ", " + cursor.getString(index);
+                nome=nome.replaceAll("\\s+", " ");
+                nome1=nome1.replaceAll("\\s+", " ");
+                due.setText(nome+"\n"+nome1);
                 index = cursor.getColumnIndexOrThrow("tipologia_grado_istruzione");
                 scuola.setGrado(cursor.getString(index));
                 index = cursor.getColumnIndexOrThrow("sito_web");
                 scuola.setSito(cursor.getString(index));
-                Log.e("sito",cursor.getString(index));
+                index = cursor.getColumnIndexOrThrow("indirizzo_email");
+                nome2 = "E-mail: " + cursor.getString(index);
+                index = cursor.getColumnIndexOrThrow("indirizzo_pec");
+                nome2 = nome2+"\nPEC: " + cursor.getString(index);
+                tre.setText(nome2);
                 break;}
 
         }
+
+        //Inizializzazione tab e titolo
         TextView titolo = findViewById(R.id.textView4);
         titolo.setText((CharSequence) scuola.getNome());
         setTitle(dato1+" - "+scuola.getNome());
         TextView grado = findViewById(R.id.textView6);
         grado.setText((CharSequence) scuola.getGrado());
-        TextView testo = findViewById(R.id.textView5);
-        testo.setText(nome);
         TabHost host = findViewById(R.id.tabHost);
         host.setup();
 
@@ -145,7 +169,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         spec.setIndicator("Vincoli");
         host.addTab(spec);
 
-
+        //Click per sito web
         ImageView i1 = findViewById(R.id.sito);
         i1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +197,72 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             }
         });
 
+        //Data inserimento nei preferiti
+        String queryp = "select * from preferiti";
+        Cursor cursor5 = dbm.query(queryp, null);
+        Preferito preferito = new Preferito();
 
+        while(cursor5 != null && cursor5.moveToNext()) {
+            int index = cursor5.getColumnIndexOrThrow("id_scuola");
+            preferito.setId_scuola(cursor5.getString(index));
+            if (preferito.getId_scuola().equals(dato1)) {
+                index = cursor5.getColumnIndexOrThrow("data_inserimento");
+                preferito.setData_inserimento(cursor5.getString(index));
+                TextView data = findViewById(R.id.textView8);
+                data.setText("Aggiunto ai preferiti in data "+preferito.getData_inserimento()+".");
+            }
+        }
+
+        //Set vincoli
+        cursor.moveToFirst();
+        while(cursor.moveToNext()) {
+            int index;
+            index = cursor.getColumnIndexOrThrow("id");
+            String id = cursor.getString(index);
+            if (id.equals(dato1)){
+                index = cursor.getColumnIndexOrThrow("vincoli_idrogeologici");
+                vincolo.setVincoli_idrogeologici(cursor.getString(index));
+                index = cursor.getColumnIndexOrThrow("vincoli_paesaggio");
+                vincolo.setVincoli_paesaggio(cursor.getString(index));
+                index = cursor.getColumnIndexOrThrow("edificio_vetusto");
+                vincolo.setEdificio_vetusto(cursor.getString(index));
+                index = cursor.getColumnIndexOrThrow("zona_sismica");
+                vincolo.setZona_sismica(cursor.getString(index));
+                index = cursor.getColumnIndexOrThrow("progettazione_antisismica");
+                vincolo.setProgettazione_antisismica(cursor.getString(index));
+                break;}
+
+        }
+        ImageView a = findViewById(R.id.imageView);
+        ImageView b = findViewById(R.id.imageView4);
+        ImageView c = findViewById(R.id.imageView7);
+        ImageView d = findViewById(R.id.imageView8);
+        TextView zona= findViewById(R.id.testoa3);
+        if (vincolo.isVincoli_idrogeologici()){
+            a.setImageResource(R.mipmap.si);
+        }
+        else{
+            a.setImageResource(R.mipmap.no);
+        }
+        if (vincolo.isVincoli_paesaggio()){
+            b.setImageResource(R.mipmap.si);
+        }
+        else{
+            b.setImageResource(R.mipmap.no);
+        }
+        if (vincolo.isEdificio_vetusto()){
+            c.setImageResource(R.mipmap.si);
+        }
+        else{
+            c.setImageResource(R.mipmap.no);
+        }
+        if (vincolo.isProgettazione_antisismica()){
+            d.setImageResource(R.mipmap.si);
+        }
+        else{
+            d.setImageResource(R.mipmap.no);
+        }
+        zona.setText(vincolo.getZona_sismica());
 
         //////////controllo se esiste preferito////////////////
         String queryPreferiti = "select * from preferiti";
