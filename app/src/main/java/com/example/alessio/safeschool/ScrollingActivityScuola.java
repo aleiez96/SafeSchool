@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,8 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -114,6 +117,9 @@ public class ScrollingActivityScuola extends AppCompatActivity {
                 scuola.setProvincia(cursor.getString(index));
                 index = cursor.getColumnIndexOrThrow("tipologia_grado_istruzione");
                 scuola.setGrado(cursor.getString(index));
+                index = cursor.getColumnIndexOrThrow("sito_web");
+                scuola.setSito(cursor.getString(index));
+                Log.e("sito",cursor.getString(index));
                 break;}
 
         }
@@ -138,6 +144,34 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         spec.setContent(R.id.tab2);
         spec.setIndicator("Vincoli");
         host.addTab(spec);
+
+
+        ImageView i1 = findViewById(R.id.sito);
+        i1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (scuola.getSito().equals("Non Disponibile")){
+                    Toast.makeText(ScrollingActivityScuola.this,"Sito non disponibile", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Uri uri = Uri.parse("http://"+scuola.getSito()); // missing 'http://' will cause crashed
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);}
+            }
+        });
+        TextView i2 = findViewById(R.id.textView7);
+        i2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (scuola.getSito().equals("Non Disponibile")){
+                    Toast.makeText(ScrollingActivityScuola.this,"Sito non disponibile", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Uri uri = Uri.parse("http://"+scuola.getSito()); // missing 'http://' will cause crashed
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);}
+            }
+        });
 
 
 

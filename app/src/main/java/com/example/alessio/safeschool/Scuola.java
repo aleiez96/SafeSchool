@@ -68,6 +68,8 @@ public class Scuola {
         this.grado = grado;
     }
 
+    public void setSito(String sito){this.sito=sito;}
+
 
     public String getId() {
         return this.id;
@@ -94,4 +96,6 @@ public class Scuola {
     public String getNome() {
         return this.nome;
     }
+
+    public String getSito(){return this.sito;}
 }
