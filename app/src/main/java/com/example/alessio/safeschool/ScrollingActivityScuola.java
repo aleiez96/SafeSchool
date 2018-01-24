@@ -6,20 +6,19 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -28,22 +27,21 @@ public class ScrollingActivityScuola extends AppCompatActivity {
     boolean check=true;
     static String nome;
     String dato1;
-    int seq=0;
-
-
+    Scuola scuola = new Scuola();
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
     static SQLiteDatabase mDb;
+    TabHost tabHost;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_scrolling_scuola);
         super.onCreate(savedInstanceState);
-
+        final FloatingActionButton fab = findViewById(R.id.fab);
         Intent intent = getIntent();
         dato1 = intent.getStringExtra("Codicescuola");
-        setTitle(dato1);
-
 
 
         mDBHelper = new DataBaseHelper(this);
@@ -62,9 +60,43 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         }
 
         ////////////dati scuola//////////////
-        String query = "select * from scuole_veneto";
-        Cursor cursor =dbm.query(query, null);
+        String query4 = "select * from scuole_veneto";
+        Cursor cursor4 =dbm.query(query4, null);
+        Log.e("cursor", cursor4.getColumnName(0));
+        Log.e("cursor", cursor4.getColumnName(1));
+        Log.e("cursor", cursor4.getColumnName(2));
+        Log.e("cursor", cursor4.getColumnName(3));
+        Log.e("cursor", cursor4.getColumnName(4));
+        Log.e("cursor", cursor4.getColumnName(5));
+        Log.e("cursor", cursor4.getColumnName(6));
+        Log.e("cursor", cursor4.getColumnName(7));
+        Log.e("cursor", cursor4.getColumnName(8));
+        Log.e("cursor", cursor4.getColumnName(9));
+        Log.e("cursor", cursor4.getColumnName(10));
+        Log.e("cursor", cursor4.getColumnName(11));
+        Log.e("cursor", cursor4.getColumnName(12));
+        Log.e("cursor", cursor4.getColumnName(13));
+        Log.e("cursor", cursor4.getColumnName(14));
+        Log.e("cursor", cursor4.getColumnName(15));
+        Log.e("cursor", cursor4.getColumnName(16));
+        Log.e("cursor", cursor4.getColumnName(17));
+        Log.e("cursor", cursor4.getColumnName(18));
+        Log.e("cursor", cursor4.getColumnName(19));
+        Log.e("cursor", cursor4.getColumnName(20));
+        String query3 = "select * from vincoli";
+        Cursor cursor3 =dbm.query(query3, null);
+        Log.e("cursor", cursor3.getColumnName(0));
+        Log.e("cursor", cursor3.getColumnName(1));
+        Log.e("cursor", cursor3.getColumnName(2));
+        Log.e("cursor", cursor3.getColumnName(3));
+        Log.e("cursor", cursor3.getColumnName(4));
+        Log.e("cursor", cursor3.getColumnName(5));
+        Log.e("cursor", cursor3.getColumnName(6));
+        Log.e("cursor", cursor3.getColumnName(7));
 
+
+        String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
+        Cursor cursor =dbm.query(query, null);
         while(cursor.moveToNext()) {
             int index;
             index = cursor.getColumnIndexOrThrow("id");
@@ -73,43 +105,58 @@ public class ScrollingActivityScuola extends AppCompatActivity {
                 index = cursor.getColumnIndexOrThrow("istituto_rif_nome");
                 nome = "\nistituto riferimento: "+cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("nome");
+                scuola.setNome(cursor.getString(index));
                 nome = nome + "\n nome scuola: " + cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("indirizzo");
                 nome = nome + "\n indirizzo: " + cursor.getString(index);
                 index = cursor.getColumnIndexOrThrow("provincia");
                 nome = nome + "\n provincia: " + cursor.getString(index);
+                scuola.setProvincia(cursor.getString(index));
+                index = cursor.getColumnIndexOrThrow("tipologia_grado_istruzione");
+                scuola.setGrado(cursor.getString(index));
                 break;}
 
         }
+        TextView titolo = findViewById(R.id.textView4);
+        titolo.setText((CharSequence) scuola.getNome());
+        setTitle(dato1+" - "+scuola.getNome());
+        TextView grado = findViewById(R.id.textView6);
+        grado.setText((CharSequence) scuola.getGrado());
+        TextView testo = findViewById(R.id.textView5);
+        testo.setText(nome);
+        TabHost host = findViewById(R.id.tabHost);
+        host.setup();
+
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec("Uno");
+        spec.setContent(R.id.tab1);
+        spec.setIndicator("Informazioni");
+        host.addTab(spec);
+
+        //Tab 2
+        spec = host.newTabSpec("Due");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator("Vincoli");
+        host.addTab(spec);
+
+
 
         //////////controllo se esiste preferito////////////////
-        String queryPreferiti = "select * from preferiti where id_scuola='"+dato1+"'";
+        String queryPreferiti = "select * from preferiti";
         Cursor cursor2 = dbm.query(queryPreferiti, null);
-        Preferito preferito = new Preferito();
 
-        while(cursor2 != null && cursor2.moveToNext()) {
-            int index = cursor2.getColumnIndexOrThrow("id_scuola");
-            preferito.setId_scuola(cursor2.getString(index));
-
-            /*index = cursor2.getColumnIndexOrThrow("data_inserimento");
-            preferito.setData_inserimento(cursor2.getString(index));
-
-            index = cursor2.getColumnIndexOrThrow("descrizione");
-            preferito.setDescrizione(cursor2.getString(index));*/
-            //check=true;
-            Log.i("pref","ciao");
+        while(cursor2!=null && cursor2.moveToNext()) {
+            int index;
+            index = cursor2.getColumnIndexOrThrow("id_scuola");
+            String id = cursor2.getString(index);
+            if (id.equals(dato1)){
+                fab.setImageResource(android.R.drawable.btn_star_big_on);
+                check=false;
+            }
         }
 
 
 
-        Log.i("provaaa",nome);
-        TextView testo = findViewById(R.id.textView1);
-
-
-        testo.setText(nome);
-
-
-        final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,17 +173,11 @@ public class ScrollingActivityScuola extends AppCompatActivity {
 
                     //////inserimento scuola//////////
                     ContentValues values = new ContentValues();
-                    values.put("id_scuola",p.getId_scuola() ); // Shop Name
-                    values.put("data_inserimento", p.getData_inserimento()); // Shop Phone Number
+                    values.put("id_scuola",p.getId_scuola() );
+                    values.put("data_inserimento", p.getData_inserimento());
                     values.put("descrizione", p.getDescrizione());
 
                     dbm.insert("preferiti",  values);
-                    Log.i("premo stella",p.getId_scuola()+p.getData_inserimento());
-
-
-
-
-
                 }
                 else {
                     fab.setImageResource(android.R.drawable.btn_star_big_off);
@@ -144,11 +185,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
                             .setAction("Action", null).show();
 
                     /////////////eliminazione scuola//////////////
-                    String[] dati={dato1};
                     dbm.delete("preferiti","id_scuola='"+dato1+"'",null);
-                    Log.i("cancellato","cancellato");
-
-
                     check=true;
                 }
             }

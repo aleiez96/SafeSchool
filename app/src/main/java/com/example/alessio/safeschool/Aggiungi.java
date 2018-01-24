@@ -180,7 +180,6 @@ public class Aggiungi extends AppCompatActivity {
 
 
     public void aggiungi(){
-        /********************* TEST DB **********************/
 
         mDBHelper = new DataBaseHelper(this);
         dbm = new DbManager(this);
@@ -224,7 +223,6 @@ public class Aggiungi extends AppCompatActivity {
 
 
         }
-        /*******************************************/
     }
 
 }

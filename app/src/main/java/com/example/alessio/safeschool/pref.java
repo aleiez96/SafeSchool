@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener
 {
 
-    ArrayList<String> nameproducts = new ArrayList<String>();
+    ArrayList<String> nameproducts = new ArrayList<>();
 
     private DataBaseHelper mDBHelper;
     private DbManager dbm;
@@ -111,7 +111,6 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Take appropriate action for each action item click
         Intent intent;
 
         if(item.isChecked())
@@ -145,8 +144,9 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
         Intent intent=new Intent(getApplicationContext(),
                 pref.class
         );
-
         startActivity(intent);
+        this.overridePendingTransition(0, 0);
+        finish();
 
         new Handler().postDelayed(new Runnable() {
             @Override

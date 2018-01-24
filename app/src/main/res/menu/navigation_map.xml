@@ -23,9 +23,21 @@
                 android:id="@+id/checkable_group"
                 android:checkableBehavior="all">
                 <item
-                    android:id="@+id/checkable_item1"
-                    android:title="Regione" />
-
+                    android:checkable="false"
+                    android:title="Regione">
+                    <menu>
+                        <group
+                            android:id="@+id/regione"
+                            android:checkableBehavior="all">
+                            <item
+                                android:id="@+id/ven"
+                                android:title="Veneto" />
+                            <item
+                                android:id="@+id/abr"
+                                android:title="Abruzzo" />
+                        </group>
+                    </menu>
+                </item>
                 <item
                     android:checkable="false"
                     android:title="Pericolosità">
@@ -47,8 +59,9 @@
                     android:title="Provincia">
                     <menu>
                         <group
-                            android:id="@+id/checkable_item2"
-                            android:checkableBehavior="all">
+                            android:id="@+id/checkable_item1"
+                            android:checkableBehavior="all"
+                            android:visible="true">
                             <item
                                 android:id="@+id/tv"
                                 android:text="TREVISO"
@@ -77,6 +90,27 @@
                                 android:id="@+id/rg"
                                 android:text="ROVIGO"
                                 android:title="ROVIGO" />
+                        </group>
+                        <group
+                            android:id="@+id/checkable_item2"
+                            android:checkableBehavior="all"
+                            android:visible="true">
+                            <item
+                                android:id="@+id/ch"
+                                android:text="CHIETI"
+                                android:title="CHIETI" />
+                            <item
+                                android:id="@+id/ps"
+                                android:text="PESCARA"
+                                android:title="PESCARA" />
+                            <item
+                                android:id="@+id/aq"
+                                android:text="L'AQUILA"
+                                android:title="L'AQUILA" />
+                            <item
+                                android:id="@+id/tr"
+                                android:text="TERAMO"
+                                android:title="TERAMO" />
                         </group>
                     </menu>
                 </item>

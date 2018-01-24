@@ -15,17 +15,19 @@ public class Scuola {
     private String sito;
     private String indirizzo;
     private String indirizzo_email;
+    private String grado;
 
     public Scuola() {
     }
 
-    public Scuola(String nome, String id, String regione, String provincia, String latitudine, String longitudine) {
+    public Scuola(String nome, String id, String regione, String provincia, String latitudine, String longitudine,String grado) {
         this.nome=nome;
         this.id=id;
         this.regione=regione;
         this.provincia=provincia;
         this.latitudine=latitudine;
         this.longitudine=longitudine;
+        this.grado=grado;
     }
 
     public Scuola(String nome, String id) {
@@ -62,6 +64,9 @@ public class Scuola {
     public void setLongitudine(String longitudine) {
         this.longitudine = longitudine;
     }
+    public void setGrado(String grado) {
+        this.grado = grado;
+    }
 
 
     public String getId() {
@@ -84,7 +89,7 @@ public class Scuola {
         return this.longitudine;
     }
 
-
+    public String getGrado(){ return this.grado;}
 
     public String getNome() {
         return this.nome;

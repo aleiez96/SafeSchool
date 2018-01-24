@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -67,6 +68,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
+    static ArrayList<String> province = new ArrayList<>();
     static ArrayList<String> regioni = new ArrayList<>();
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
@@ -101,7 +103,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDBHelper = new DataBaseHelper(MapsActivity.this);
         dbm = new DbManager(MapsActivity.this);
@@ -247,19 +248,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.navigation_home:
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
+            case R.id.abr:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                }
+                else {
+                    item.setChecked(true);
+                }
+                regioni.add((String) item.getTitle());
+                invalidateOptionsMenu();
+                break;
             case R.id.tv:
                 gMap.clear();
                 mClusterManager.clearItems();
                 if(item.isChecked()) {
                     item.setChecked(false);
                     int i;
-                    i=regioni.indexOf((Object) item.getTitle());
-                    regioni.remove(i);
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
                     query();
                 }
                 else {
                     item.setChecked(true);
-                    regioni.add((String)item.getTitle());
+                    province.add((String)item.getTitle());
                     query();
                 }
                 break;
@@ -269,13 +280,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(item.isChecked()) {
                     item.setChecked(false);
                     int i;
-                    i=regioni.indexOf((Object) item.getTitle());
-                    regioni.remove(i);
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
                     query();
                 }
                 else {
                     item.setChecked(true);
-                    regioni.add((String)item.getTitle());
+                    province.add((String)item.getTitle());
                     query();
                 }
                 break;
@@ -285,13 +296,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(item.isChecked()) {
                     item.setChecked(false);
                     int i;
-                    i=regioni.indexOf((Object) item.getTitle());
-                    regioni.remove(i);
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
                     query();
                 }
                 else {
                     item.setChecked(true);
-                    regioni.add((String)item.getTitle());
+                    province.add((String)item.getTitle());
                     query();
                 }
                 break;
@@ -301,13 +312,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(item.isChecked()) {
                     item.setChecked(false);
                     int i;
-                    i=regioni.indexOf((Object) item.getTitle());
-                    regioni.remove(i);
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
                     query();
                 }
                 else {
                     item.setChecked(true);
-                    regioni.add((String)item.getTitle());
+                    province.add((String)item.getTitle());
                     query();
                 }
                 break;
@@ -317,13 +328,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(item.isChecked()) {
                     item.setChecked(false);
                     int i;
-                    i=regioni.indexOf((Object) item.getTitle());
-                    regioni.remove(i);
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
                     query();
                 }
                 else {
                     item.setChecked(true);
-                    regioni.add((String)item.getTitle());
+                    province.add((String)item.getTitle());
                     query();
                 }
                 break;
@@ -333,13 +344,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(item.isChecked()) {
                     item.setChecked(false);
                     int i;
-                    i=regioni.indexOf((Object) item.getTitle());
-                    regioni.remove(i);
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
                     query();
                 }
                 else {
                     item.setChecked(true);
-                    regioni.add((String)item.getTitle());
+                    province.add((String)item.getTitle());
                     query();
                 }
                 break;
@@ -349,24 +360,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(item.isChecked()) {
                     item.setChecked(false);
                     int i;
-                    i=regioni.indexOf((Object) item.getTitle());
-                    regioni.remove(i);
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
                     query();
                 }
                 else {
                     item.setChecked(true);
-                    regioni.add((String)item.getTitle());
+                    province.add((String)item.getTitle());
                     query();
                 }
                 break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
         return false;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem veneto = menu.findItem(R.id.checkable_item1);
+        MenuItem abruzzo = menu.findItem(R.id.checkable_item2);
+        for (String regione: regioni) {
+            if ((regione).equals("Veneto"))  abruzzo.setVisible(false);
+            if ((regione).equals("Abruzzo")) veneto.setVisible(false);
+        }
+        return true;
+    }
 
+    private void selectMenu(Menu menu) {
+        menu.clear();
+        MenuInflater inflater = getMenuInflater();
+        MenuItem i= findViewById(R.id.abr);
+        if (i!=null && i.isChecked()) {
+            inflater.inflate(R.menu.navigation_map, menu);
+        }
+        else {
+            inflater.inflate(R.menu.navigation_map, menu);
+        }
+    }
 
     public void query (){
-        if(regioni.isEmpty()||regioni.size()==7){
+        if(province.isEmpty()||province.size()==7){
             String query = "select * from scuole_veneto";
             Cursor cursor = dbm.query(query, null);
 
@@ -389,9 +426,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         else{
-            for (String regione: regioni) {
+            for (String provincia: province) {
                 String query = "select * from scuole_veneto where provincia=?";
-                Cursor cursor = dbm.query(query, new String[]{regione});
+                Cursor cursor = dbm.query(query, new String[]{provincia});
 
                 while (cursor.moveToNext()) {
                     int index;
@@ -415,12 +452,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
     }
-
-
-
-    // onConnection callbacks
-    //
-    //
 
     /**
      * Viene chiamata quando i servizi di localizzazione sono attivi.
@@ -610,9 +641,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(navigation);
     }
 
-    // marker stuff
-    //
-    //
 
     /**
      * Callback che viene invocata quando viene cliccato un marker.
@@ -704,32 +732,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return null;
         }
 
-        //@Override
-        protected void onProgressUpdate(Integer ... a){
-            //output.setText("Markers:"+a[0]+"% completato");
-        }
 
         @Override
         protected void onPostExecute(Void a) {
-            //output.setText("Fine!");
             stopLockTask();
         }
 
     }
-    // Declare a variable for the cluster manager.
+
     private ClusterManager<MyItem> mClusterManager;
-
     private void setUpClusterer(Context context) {
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<MyItem>(context, gMap);
-
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
         gMap.setOnCameraIdleListener(mClusterManager);
         gMap.setOnMarkerClickListener(mClusterManager);
-
-        // Add cluster items (markers) to the cluster manager.
         myAsync mTask = new myAsync();
         mTask.execute();
     }
@@ -740,7 +755,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
         intent.putExtra("Codicescuola",marker.getTitle());
-        Log.i("id",marker.getTitle());
         startActivity(intent);
     }
 
