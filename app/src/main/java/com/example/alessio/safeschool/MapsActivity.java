@@ -709,7 +709,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String query = "select * from scuole_veneto";
+            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
             Cursor cursor = dbm.query(query, null);
 
             while(cursor.moveToNext()) {
@@ -752,7 +752,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
         intent.putExtra("Codicescuola",marker.getTitle());
         startActivity(intent);
