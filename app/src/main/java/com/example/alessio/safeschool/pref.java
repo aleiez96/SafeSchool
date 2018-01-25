@@ -26,6 +26,8 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
 {
 
     ArrayList<String> nameproducts = new ArrayList<>();
+    ArrayList<String> preferiti = new ArrayList<>();
+
 
     private DataBaseHelper mDBHelper;
     private DbManager dbm;
@@ -59,12 +61,15 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
             throw mSQLException;
         }
 
-        String queryPreferiti = "select * from preferiti";
+        String queryPreferiti = "select * from scuole_veneto inner join preferiti on scuole_veneto.id=preferiti.id_scuola";
         Cursor cursor2 = dbm.query(queryPreferiti, null);
         Preferito preferito = new Preferito();
 
         while(cursor2 != null && cursor2.moveToNext()) {
-            int index = cursor2.getColumnIndexOrThrow("id_scuola");
+            int index = cursor2.getColumnIndexOrThrow("nome");
+            String nome=cursor2.getString(index);
+
+            index = cursor2.getColumnIndexOrThrow("id_scuola");
             preferito.setId_scuola(cursor2.getString(index));
 
             index = cursor2.getColumnIndexOrThrow("data_inserimento");
@@ -73,14 +78,19 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
             index = cursor2.getColumnIndexOrThrow("descrizione");
             preferito.setDescrizione(cursor2.getString(index));
             Log.i("pref",preferito.getId_scuola());
-            nameproducts.add(preferito.getId_scuola());
+            Log.i("nome",nome);
+            nameproducts.add(nome);
+            preferiti.add(preferito.getId_scuola());
         }
+
+
 
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.pref_menu, menu);
+        //getMenuInflater().inflate(R.menu.refresh, menu);
         if(nameproducts.size()>=0) {
 
             final ArrayList<String> listp = new ArrayList<String>();
@@ -99,7 +109,7 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
                             ScrollingActivityScuola.class
                     );
 
-                    intent.putExtra("Codicescuola", nameproducts.get(position));
+                    intent.putExtra("Codicescuola", preferiti.get(position));
                     startActivity(intent);
                 }
             });

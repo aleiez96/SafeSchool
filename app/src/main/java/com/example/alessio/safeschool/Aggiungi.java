@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,7 @@ public class Aggiungi extends AppCompatActivity {
     ListView lstView;
     ArrayList<Scuola> lstSource=new ArrayList<>();
     ArrayList<String> lstSource2=new ArrayList<>();
+    ArrayList<String> id_s=null;
 
 
     @Override
@@ -50,7 +53,7 @@ public class Aggiungi extends AppCompatActivity {
             }
         });
 */
-        /*Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+       /* Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Material Search");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));*/
@@ -96,11 +99,16 @@ public class Aggiungi extends AppCompatActivity {
                 if(newText != null && !newText.isEmpty()){
                     String item;
                     List<String> lstFound = new ArrayList<String>();
+                    id_s=new ArrayList<>();
+                    Scuola s;
                     for( int i=0;i<lstSource.size() ;i++){
                         item=lstSource.get(i).getNome();
                         Log.i("nome",item);
-                        if(item.contains(newText))
+                        if(item.contains(newText)) {
+                            id_s.add(lstSource.get(i).getId());
                             lstFound.add(item);
+                        }
+
 
                     }
 
@@ -110,6 +118,7 @@ public class Aggiungi extends AppCompatActivity {
                 else{
                     //if search text is null
                     //return default
+                    id_s=null;
                     ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource2);
                     lstView.setAdapter(adapter);
                 }
@@ -125,9 +134,14 @@ public class Aggiungi extends AppCompatActivity {
                 Intent intent=new Intent(getApplicationContext(),
                         ScrollingActivityScuola.class
                 );
+                String.valueOf(parent.getItemIdAtPosition(position));
+                if(id_s!=null)
+                    intent.putExtra("Codicescuola",id_s.get(position));
+                else
+                    intent.putExtra("Codicescuola",lstSource.get(position).getId());
+                //Log.i("aggiungi activity", String.valueOf(parent.getItemAtPosition(position)));
+                //Log.i("aggiungi activity",id_s.get(position) );
 
-                intent.putExtra("Codicescuola",lstSource.get(position).getId());
-                Log.i("aggiungi activity",lstSource.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -220,6 +234,8 @@ public class Aggiungi extends AppCompatActivity {
             Scuola s=new Scuola(nome,id);
             lstSource.add(s);
             lstSource2.add(nome);
+
+
 
 
         }

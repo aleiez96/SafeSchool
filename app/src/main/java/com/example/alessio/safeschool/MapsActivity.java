@@ -52,18 +52,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Questa classe è la componente principale del toolkit: fornisce servizi primari per un'app basata su Google Maps, tra cui localizzazione, pulsanti
- * di navigazione, preferenze ed altro. Essa rappresenta un template che è una buona pratica riusabile per la scrittura di app, fungendo da base
- * solida, robusta e mantenibile.
- * Vengono rispettate le convenzioni e gli standard di qualità di Google per la scrittura di app Android; ogni pulsante, componente,
- * menu ecc. è definito in modo che sia facile riprodurne degli altri con caratteristiche diverse.
- * All'interno del codice ci sono dei commenti che aiutano il programmatore ad estendere questa app in maniera corretta, rispettando le convenzioni
- * e gli standard qualitativi.
- * Per scrivere una propria app è necessario modificare questa classe, aggiungendo campi, metodi e codice che svolge le funzionalità richieste.
- *
- * @author Alvise Spanò, Università Ca' Foscari
- */
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
