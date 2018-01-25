@@ -42,7 +42,7 @@ public class Benvenuto extends AppCompatActivity{
 
 
         /******************* esempio Scuola ********************/
-        String queryScuole = "select * from scuole_veneto limit 1";
+        String queryScuole = "select * from scuole limit 1";
         Cursor cursor = dbm.query(queryScuole, null);
         Scuola scuola = new Scuola();
 

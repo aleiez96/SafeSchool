@@ -64,7 +64,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         }
 
         ////////////dati scuola//////////////
-        String query4 = "select * from scuole_veneto";
+        String query4 = "select * from scuole";
         Cursor cursor4 =dbm.query(query4, null);
         Log.e("cursor", cursor4.getColumnName(0));
         Log.e("cursor", cursor4.getColumnName(1));
@@ -99,7 +99,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
         Log.e("cursor", cursor3.getColumnName(7));
 
 
-        String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
+        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
         Cursor cursor =dbm.query(query, null);
         TextView uno = findViewById(R.id.textView13);
         TextView due = findViewById(R.id.textView14);

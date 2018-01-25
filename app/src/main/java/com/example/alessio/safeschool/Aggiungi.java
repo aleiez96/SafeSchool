@@ -211,7 +211,7 @@ public class Aggiungi extends AppCompatActivity {
             throw mSQLException;
         }
 
-        String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
+        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
         Cursor cursor = dbm.query(query, null);
 
         while(cursor.moveToNext()) {

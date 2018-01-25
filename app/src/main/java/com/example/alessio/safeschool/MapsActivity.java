@@ -459,14 +459,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void queryfiltra (){
         if((province.isEmpty()||province.size()==7)&&(vincoli.isEmpty())){
-            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
+            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
             Cursor cursor = dbm.query(query, null);
             inserimento(cursor);
         }
         else{
             if (vincoli.isEmpty()) {
                 for (String provincia : province) {
-                    String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=?";
+                    String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=?";
                     Cursor cursor = dbm.query(query, new String[]{provincia});
                     inserimento(cursor);
                 }
@@ -475,22 +475,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (province.isEmpty()){
                     switch (vincoli.size()){
                         case 1:
-                            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI'";
+                            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI'";
                             Cursor cursor = dbm.query(query, null);
                             inserimento(cursor);
                             break;
                         case 2:
-                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
                             cursor = dbm.query(query, null);
                             inserimento(cursor);
                             break;
                         case 3:
-                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
                             cursor = dbm.query(query, null);
                             inserimento(cursor);
                             break;
                         case 4:
-                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
                             cursor = dbm.query(query, null);
                             inserimento(cursor);
                             break;
@@ -500,28 +500,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     switch (vincoli.size()){
                         case 1:
                             for (String provincia : province) {
-                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI'";
+                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI'";
                                 Cursor cursor = dbm.query(query, new String[]{provincia});
                                 inserimento(cursor);
                             }
                             break;
                         case 2:
                             for (String provincia : province) {
-                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
                                 Cursor cursor = dbm.query(query, new String[]{provincia});
                                 inserimento(cursor);
                             }
                             break;
                         case 3:
                             for (String provincia : province) {
-                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
                                 Cursor cursor = dbm.query(query, new String[]{provincia});
                                 inserimento(cursor);
                             }
                             break;
                         case 4:
                             for (String provincia : province) {
-                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
                                 Cursor cursor = dbm.query(query, new String[]{provincia});
                                 inserimento(cursor);
                             }
@@ -810,7 +810,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
+            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
             Cursor cursor = dbm.query(query, null);
 
             while(cursor.moveToNext()) {

@@ -61,7 +61,7 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
             throw mSQLException;
         }
 
-        String queryPreferiti = "select * from scuole_veneto inner join preferiti on scuole_veneto.id=preferiti.id_scuola";
+        String queryPreferiti = "select * from scuole inner join preferiti on scuole.id=preferiti.id_scuola";
         Cursor cursor2 = dbm.query(queryPreferiti, null);
         Preferito preferito = new Preferito();
 
