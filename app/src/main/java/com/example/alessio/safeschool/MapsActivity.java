@@ -70,6 +70,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     static ArrayList<String> province = new ArrayList<>();
     static ArrayList<String> regioni = new ArrayList<>();
+    static ArrayList<String> vincoli = new ArrayList<>();
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
     static SQLiteDatabase mDb;
@@ -258,6 +259,70 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 regioni.add((String) item.getTitle());
                 invalidateOptionsMenu();
                 break;
+            case R.id.p1:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "vincoli_idrogeologici");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("vincoli_idrogeologici");
+                    queryfiltra();
+                }
+                break;
+            case R.id.p2:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "vincoli_paesaggio");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("vincoli_paesaggio");
+                    queryfiltra();
+                }
+                break;
+            case R.id.p3:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "edificio_vetusto");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("edificio_vetusto");
+                    queryfiltra();
+                }
+                break;
+            case R.id.p4:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "progettazione_antisismica");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("progettazione_antisismica");
+                    queryfiltra();
+                }
+                break;
             case R.id.tv:
                 gMap.clear();
                 mClusterManager.clearItems();
@@ -266,12 +331,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int i;
                     i=province.indexOf((Object) item.getTitle());
                     province.remove(i);
-                    query();
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
                     province.add((String)item.getTitle());
-                    query();
+                    queryfiltra();
                 }
                 break;
             case R.id.pd:
@@ -282,12 +347,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int i;
                     i=province.indexOf((Object) item.getTitle());
                     province.remove(i);
-                    query();
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
                     province.add((String)item.getTitle());
-                    query();
+                    queryfiltra();
                 }
                 break;
             case R.id.vi:
@@ -298,12 +363,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int i;
                     i=province.indexOf((Object) item.getTitle());
                     province.remove(i);
-                    query();
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
                     province.add((String)item.getTitle());
-                    query();
+                    queryfiltra();
                 }
                 break;
             case R.id.vr:
@@ -314,12 +379,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int i;
                     i=province.indexOf((Object) item.getTitle());
                     province.remove(i);
-                    query();
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
                     province.add((String)item.getTitle());
-                    query();
+                    queryfiltra();
                 }
                 break;
             case R.id.bl:
@@ -330,12 +395,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int i;
                     i=province.indexOf((Object) item.getTitle());
                     province.remove(i);
-                    query();
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
                     province.add((String)item.getTitle());
-                    query();
+                    queryfiltra();
                 }
                 break;
             case R.id.rg:
@@ -346,12 +411,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int i;
                     i=province.indexOf((Object) item.getTitle());
                     province.remove(i);
-                    query();
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
                     province.add((String)item.getTitle());
-                    query();
+                    queryfiltra();
                 }
                 break;
             case R.id.ve:
@@ -362,12 +427,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     int i;
                     i=province.indexOf((Object) item.getTitle());
                     province.remove(i);
-                    query();
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
                     province.add((String)item.getTitle());
-                    query();
+                    queryfiltra();
                 }
                 break;
 
@@ -402,54 +467,59 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void query (){
-        if(province.isEmpty()||province.size()==7){
-            String query = "select * from scuole_veneto";
+    public void queryfiltra (){
+        if((province.isEmpty()||province.size()==7)&&(vincoli.isEmpty())){
+            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
             Cursor cursor = dbm.query(query, null);
-
-            while (cursor.moveToNext()) {
-                int index;
-                index = cursor.getColumnIndexOrThrow("id");
-                String den = cursor.getString(index);
-
-                index = cursor.getColumnIndexOrThrow("provincia");
-                String snip = cursor.getString(index);
-
-                index = cursor.getColumnIndexOrThrow("latitudine");
-                String lat = cursor.getString(index);
-
-                index = cursor.getColumnIndexOrThrow("longitudine");
-                String lng = cursor.getString(index);
-
-                MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
-                mClusterManager.addItem(offsetItem);
-            }
+            inserimento(cursor);
         }
         else{
-            for (String provincia: province) {
-                String query = "select * from scuole_veneto where provincia=?";
-                Cursor cursor = dbm.query(query, new String[]{provincia});
-
-                while (cursor.moveToNext()) {
-                    int index;
-                    index = cursor.getColumnIndexOrThrow("id");
-                    String den = cursor.getString(index);
-
-                    index = cursor.getColumnIndexOrThrow("provincia");
-                    String snip = cursor.getString(index);
-
-                    index = cursor.getColumnIndexOrThrow("latitudine");
-                    String lat = cursor.getString(index);
-
-                    index = cursor.getColumnIndexOrThrow("longitudine");
-                    String lng = cursor.getString(index);
-
-                    MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
-                    mClusterManager.addItem(offsetItem);
+            if (vincoli.isEmpty()) {
+                for (String provincia : province) {
+                    String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=?";
+                    Cursor cursor = dbm.query(query, new String[]{provincia});
+                    inserimento(cursor);
                 }
-
+            }
+            else{
+                if (province.isEmpty()){
+                    for (String vincolo : vincoli) {
+                        String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincolo + "='SI'";
+                        Cursor cursor = dbm.query(query, null);
+                        inserimento(cursor);
+                    }
+                }
+                else {
+                    for (String vincolo : vincoli) {
+                        for (String provincia : province) {
+                            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincolo + "='SI'";
+                            Cursor cursor = dbm.query(query, new String[]{provincia});
+                            inserimento(cursor);
+                        }
+                    }
+                }
             }
 
+        }
+    }
+
+    public void inserimento(Cursor cursor){
+        while (cursor.moveToNext()) {
+            int index;
+            index = cursor.getColumnIndexOrThrow("id");
+            String den = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("provincia");
+            String snip = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("latitudine");
+            String lat = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("longitudine");
+            String lng = cursor.getString(index);
+
+            MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
+            mClusterManager.addItem(offsetItem);
         }
     }
 

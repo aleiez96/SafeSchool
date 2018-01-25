@@ -40,17 +40,23 @@
                 </item>
                 <item
                     android:checkable="false"
-                    android:title="Pericolosità">
+                    android:title="Vincoli">
                     <menu>
                         <group
                             android:id="@+id/pericolosità"
                             android:checkableBehavior="all">
                             <item
                                 android:id="@+id/p1"
-                                android:title="1" />
+                                android:title="Idrogeologici" />
                             <item
                                 android:id="@+id/p2"
-                                android:title="2" />
+                                android:title="Paesaggio" />
+                            <item
+                                android:id="@+id/p3"
+                                android:title="Edificio vetusto" />
+                            <item
+                                android:id="@+id/p4"
+                                android:title="Prog. antisismica" />
                         </group>
                     </menu>
                 </item>

@@ -81,7 +81,6 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.pref_menu, menu);
-        getMenuInflater().inflate(R.menu.refresh, menu);
         if(nameproducts.size()>=0) {
 
             final ArrayList<String> listp = new ArrayList<String>();
