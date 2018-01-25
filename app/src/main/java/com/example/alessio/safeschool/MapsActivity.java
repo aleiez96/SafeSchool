@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewDebug;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -483,20 +484,61 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             else{
                 if (province.isEmpty()){
-                    for (String vincolo : vincoli) {
-                        String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincolo + "='SI'";
-                        Cursor cursor = dbm.query(query, null);
-                        inserimento(cursor);
+                    switch (vincoli.size()){
+                        case 1:
+                            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI'";
+                            Cursor cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
+                        case 2:
+                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                            cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
+                        case 3:
+                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                            cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
+                        case 4:
+                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                            cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
                     }
                 }
                 else {
-                    for (String vincolo : vincoli) {
-                        for (String provincia : province) {
-                            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincolo + "='SI'";
-                            Cursor cursor = dbm.query(query, new String[]{provincia});
-                            inserimento(cursor);
-                        }
+                    switch (vincoli.size()){
+                        case 1:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
+                        case 2:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
+                        case 3:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
+                        case 4:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
                     }
+
                 }
             }
 
