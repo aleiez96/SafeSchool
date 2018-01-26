@@ -148,8 +148,6 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-        Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
-
         Intent intent=new Intent(getApplicationContext(),
                 pref.class
         );

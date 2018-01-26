@@ -810,31 +810,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         while(cursor.moveToNext()) {
             int index;
-            String lat,lng;
             index = cursor.getColumnIndexOrThrow("id");
             String den = cursor.getString(index);
 
             index = cursor.getColumnIndexOrThrow("provincia");
             String snip = cursor.getString(index);
 
-            index = cursor.getColumnIndexOrThrow("regione");
-            String reg = cursor.getString(index);
 
-            if (reg.equals("ABRUZZO")){
-                index = cursor.getColumnIndexOrThrow("longitudine");
-                lat = cursor.getString(index);
-
-                index = cursor.getColumnIndexOrThrow("latitudine");
-                lng = cursor.getString(index);
-            }
-            else {
-                index = cursor.getColumnIndexOrThrow("latitudine");
-                lat = cursor.getString(index);
+            index = cursor.getColumnIndexOrThrow("latitudine");
+            String lat = cursor.getString(index);
 
 
-                index = cursor.getColumnIndexOrThrow("longitudine");
-                lng = cursor.getString(index);
-            }
+            index = cursor.getColumnIndexOrThrow("longitudine");
+            String lng = cursor.getString(index);
 
             MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
             mClusterManager.addItem(offsetItem);

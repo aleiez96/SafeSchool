@@ -99,8 +99,11 @@ public class Aggiungi extends AppCompatActivity{
                             lstFound.add(item);
                         }
 
-
                     }
+                    HashSet<String> hashSet = new HashSet<String>();
+                    hashSet.addAll(lstFound);
+                    lstFound.clear();
+                    lstFound.addAll(hashSet);
 
                     ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstFound);
                     lstView.setAdapter(adapter);
