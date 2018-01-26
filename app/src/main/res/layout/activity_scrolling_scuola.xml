@@ -283,7 +283,7 @@
                             app:layout_constraintHorizontal_bias="0.25"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.92">
+                            app:layout_constraintVertical_bias="0.876">
 
                             <android.support.constraint.ConstraintLayout
                                 android:layout_width="match_parent"

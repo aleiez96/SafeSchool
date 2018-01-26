@@ -25,6 +25,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewDebug;
+import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -58,8 +60,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
+
     static ArrayList<String> province = new ArrayList<>();
-    static ArrayList<String> regioni = new ArrayList<>();
     static ArrayList<String> vincoli = new ArrayList<>();
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
@@ -94,6 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
 
         mDBHelper = new DataBaseHelper(MapsActivity.this);
         dbm = new DbManager(MapsActivity.this);
@@ -232,6 +235,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Checkable ve= findViewById(R.id.ve);
+        Checkable vi= findViewById(R.id.vi);
+        Checkable vr= findViewById(R.id.vr);
+        Checkable tv= findViewById(R.id.tv);
+        Checkable rg= findViewById(R.id.rg);
+        Checkable pd= findViewById(R.id.pd);
+        Checkable bl= findViewById(R.id.bl);
         switch (item.getItemId()) {
             case R.id.Impostazioni:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -239,15 +249,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.navigation_home:
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
-            case R.id.abr:
+            case R.id.ven:
                 if(item.isChecked()) {
                     item.setChecked(false);
+                    ve.setChecked(false);
+                    vi.setChecked(false);
+                    vr.setChecked(false);
+                    tv.setChecked(false);
+                    rg.setChecked(false);
+                    pd.setChecked(false);
+                    bl.setChecked(false);
                 }
                 else {
                     item.setChecked(true);
+                    ve.setChecked(true);
+                    vi.setChecked(true);
+                    vr.setChecked(true);
+                    tv.setChecked(true);
+                    rg.setChecked(true);
+                    pd.setChecked(true);
+                    bl.setChecked(true);
                 }
-                regioni.add((String) item.getTitle());
-                invalidateOptionsMenu();
                 break;
             case R.id.p1:
                 gMap.clear();
@@ -433,29 +455,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        MenuItem veneto = menu.findItem(R.id.checkable_item1);
-        MenuItem abruzzo = menu.findItem(R.id.checkable_item2);
-        for (String regione: regioni) {
-            if ((regione).equals("Veneto"))  abruzzo.setVisible(false);
-            if ((regione).equals("Abruzzo")) veneto.setVisible(false);
-        }
-        return true;
-    }
-
-    private void selectMenu(Menu menu) {
-        menu.clear();
-        MenuInflater inflater = getMenuInflater();
-        MenuItem i= findViewById(R.id.abr);
-        if (i!=null && i.isChecked()) {
-            inflater.inflate(R.menu.navigation_map, menu);
-        }
-        else {
-            inflater.inflate(R.menu.navigation_map, menu);
-        }
-    }
 
     public void queryfiltra (){
         if((province.isEmpty()||province.size()==7)&&(vincoli.isEmpty())){
@@ -801,53 +800,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public class myAsync extends AsyncTask<Void,Integer,Void>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
-            Cursor cursor = dbm.query(query, null);
-
-            while(cursor.moveToNext()) {
-                int index;
-                index = cursor.getColumnIndexOrThrow("id");
-                String den = cursor.getString(index);
-
-                index = cursor.getColumnIndexOrThrow("provincia");
-                String snip = cursor.getString(index);
-
-                index = cursor.getColumnIndexOrThrow("latitudine");
-                String lat = cursor.getString(index);
-
-                index = cursor.getColumnIndexOrThrow("longitudine");
-                String lng = cursor.getString(index);
-
-                MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
-                mClusterManager.addItem(offsetItem);
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Void a) {
-            stopLockTask();
-        }
-
-    }
-
     private ClusterManager<MyItem> mClusterManager;
     private void setUpClusterer(Context context) {
         mClusterManager = new ClusterManager<MyItem>(context, gMap);
         gMap.setOnCameraIdleListener(mClusterManager);
         gMap.setOnMarkerClickListener(mClusterManager);
-        myAsync mTask = new myAsync();
-        mTask.execute();
+        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
+        Cursor cursor = dbm.query(query, null);
+
+        while(cursor.moveToNext()) {
+            int index;
+            String lat,lng;
+            index = cursor.getColumnIndexOrThrow("id");
+            String den = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("provincia");
+            String snip = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("regione");
+            String reg = cursor.getString(index);
+
+            if (reg.equals("ABRUZZO")){
+                index = cursor.getColumnIndexOrThrow("longitudine");
+                lat = cursor.getString(index);
+
+                index = cursor.getColumnIndexOrThrow("latitudine");
+                lng = cursor.getString(index);
+            }
+            else {
+                index = cursor.getColumnIndexOrThrow("latitudine");
+                lat = cursor.getString(index);
+
+
+                index = cursor.getColumnIndexOrThrow("longitudine");
+                lng = cursor.getString(index);
+            }
+
+            MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
+            mClusterManager.addItem(offsetItem);
+        }
+
     }
 
 

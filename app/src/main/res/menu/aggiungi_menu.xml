@@ -11,37 +11,125 @@
         />
 
 
-    <item android:title="filtra">
-       <menu>
-           <group
-               android:id="@+id/checkable_group"
-               android:checkableBehavior="all">
-           <item
-               android:id="@+id/checkable_item1"
-               android:title="regione"/>
-           <item
-               android:id="@+id/checkable_item2"
-               android:title="provincia"
-               android:checked="true"/>
+    <item android:title="Filtra">
+        <menu
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <group
+                android:id="@+id/checkable_group"
+                android:checkableBehavior="all">
+                <item
+                    android:checkable="false"
+                    android:title="Regione">
+                    <menu>
+                        <group
+                            android:id="@+id/regione"
+                            android:checkableBehavior="all">
+                            <item
+                                android:id="@+id/ven"
+                                android:title="Veneto" />
+                            <item
+                                android:id="@+id/abr"
+                                android:title="Abruzzo" />
+                        </group>
+                    </menu>
+                </item>
+                <item
+                    android:checkable="false"
+                    android:title="Vincoli">
+                    <menu>
+                        <group
+                            android:id="@+id/pericolosità"
+                            android:checkableBehavior="all">
+                            <item
+                                android:id="@+id/p1"
+                                android:title="Idrogeologici" />
+                            <item
+                                android:id="@+id/p2"
+                                android:title="Paesaggio" />
+                            <item
+                                android:id="@+id/p3"
+                                android:title="Edificio vetusto" />
+                            <item
+                                android:id="@+id/p4"
+                                android:title="Prog. antisismica" />
+                        </group>
+                    </menu>
+                </item>
+                <item
+                    android:checkable="false"
+                    android:title="Provincia">
+                    <menu>
+                        <group android:id="@+id/regioni">
+                            <item android:title="Veneto" >
+                                <menu>
+                                    <group
+                                        android:id="@+id/checkable_item1"
+                                        android:checkableBehavior="all"
+                                        android:visible="true">
+                                        <item
+                                            android:id="@+id/tv"
+                                            android:text="TREVISO"
+                                            android:title="TREVISO" />
+                                        <item
+                                            android:id="@+id/pd"
+                                            android:text="PADOVA"
+                                            android:title="PADOVA" />
+                                        <item
+                                            android:id="@+id/ve"
+                                            android:text="VENEZIA"
+                                            android:title="VENEZIA" />
+                                        <item
+                                            android:id="@+id/vr"
+                                            android:text="VERONA"
+                                            android:title="VERONA" />
+                                        <item
+                                            android:id="@+id/vi"
+                                            android:text="VICENZA"
+                                            android:title="VICENZA" />
+                                        <item
+                                            android:id="@+id/bl"
+                                            android:text="BELLUNO"
+                                            android:title="BELLUNO" />
+                                        <item
+                                            android:id="@+id/rg"
+                                            android:text="ROVIGO"
+                                            android:title="ROVIGO" />
+                                    </group>
+                                </menu>
+                            </item>
+                            <item android:title="Abruzzo" >
+                                <menu>
+                                    <group
+                                        android:id="@+id/checkable_item2"
+                                        android:checkableBehavior="all"
+                                        android:visible="true">
+                                        <item
+                                            android:id="@+id/ch"
+                                            android:text="CHIETI"
+                                            android:title="CHIETI" />
+                                        <item
+                                            android:id="@+id/ps"
+                                            android:text="PESCARA"
+                                            android:title="PESCARA" />
+                                        <item
+                                            android:id="@+id/aq"
+                                            android:text="L'AQUILA"
+                                            android:title="L'AQUILA" />
+                                        <item
+                                            android:id="@+id/tr"
+                                            android:text="TERAMO"
+                                            android:title="TERAMO" />
+                                    </group>
+                                </menu>
+                            </item>
+                        </group>
 
-               <item android:title="pericolosità"
-                   android:checkable="false">
-               <menu>
-               <group
-                  android:id="@+id/pericolosità"
-                  android:checkableBehavior="all">
-                  <item
-                      android:id="@+id/p1"
-                      android:title="1"/>
-                  <item
-                      android:id="@+id/p2"
-                      android:title="2"/>
-               </group>
-               </menu>
-               </item>
+                    </menu>
+                </item>
 
-           </group>
-       </menu>
+            </group>
+        </menu>
     </item>
 
 

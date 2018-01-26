@@ -21,9 +21,11 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
-public class Aggiungi extends AppCompatActivity {
+public class Aggiungi extends AppCompatActivity{
 
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
@@ -34,6 +36,8 @@ public class Aggiungi extends AppCompatActivity {
     ArrayList<Scuola> lstSource=new ArrayList<>();
     ArrayList<String> lstSource2=new ArrayList<>();
     ArrayList<String> id_s=null;
+    ArrayList<String> vincoli=new ArrayList<>();
+    ArrayList<String> province=new ArrayList<>();
 
 
     @Override
@@ -41,27 +45,12 @@ public class Aggiungi extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aggiungi);
         aggiungi();
-       /* Button b1 = (Button)findViewById(R.id.button2);
-        b1.setOnClickListener(new View.OnClickListener().OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getApplicationContext(),
-                        ScrollingActivityScuola.class
-                );
-
-                startActivity(intent);
-            }
-        });
-*/
-       /* Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Material Search");
-        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));*/
 
         lstView = (ListView)findViewById(R.id.lstView);
 
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lstSource2);
         lstView.setAdapter(adapter);
+
 
 
         searchView = (MaterialSearchView)findViewById(R.id.search_view);
@@ -97,8 +86,9 @@ public class Aggiungi extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
 
                 if(newText != null && !newText.isEmpty()){
+                    lstView.clearDisappearingChildren();
                     String item;
-                    List<String> lstFound = new ArrayList<String>();
+                    ArrayList<String> lstFound = new ArrayList<String>();
                     id_s=new ArrayList<>();
                     Scuola s;
                     for( int i=0;i<lstSource.size() ;i++){
@@ -152,7 +142,6 @@ public class Aggiungi extends AppCompatActivity {
 
 
 
-
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.aggiungi_menu,menu);
@@ -164,15 +153,7 @@ public class Aggiungi extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id=item.getItemId();
-        if(item.isChecked())
-            item.setChecked(false);
-        else
-            item.setChecked(true);
-
-
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.action_search:
                 return true;
             case R.id.checkable_item1:
@@ -182,14 +163,266 @@ public class Aggiungi extends AppCompatActivity {
                 Toast.makeText(this, "Filtro provincia", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.p1:
-                Toast.makeText(this, "Filtro pericolosità", Toast.LENGTH_SHORT).show();
-                return true;
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "vincoli_idrogeologici");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("vincoli_idrogeologici");
+                    queryfiltra();
+                }
+                break;
             case R.id.p2:
-                Toast.makeText(this, "Filtro pericolosità", Toast.LENGTH_SHORT).show();
-                return true;
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "vincoli_paesaggio");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("vincoli_paesaggio");
+                    queryfiltra();
+                }
+                break;
+            case R.id.p3:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "edificio_vetusto");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("edificio_vetusto");
+                    queryfiltra();
+                }
+                break;
+            case R.id.p4:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=vincoli.indexOf((Object) "progettazione_antisismica");
+                    vincoli.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    vincoli.add("progettazione_antisismica");
+                    queryfiltra();
+                }
+                break;
+            case R.id.tv:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    province.add((String)item.getTitle());
+                    queryfiltra();
+                }
+                break;
+            case R.id.pd:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    province.add((String)item.getTitle());
+                    queryfiltra();
+                }
+                break;
+            case R.id.vi:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    province.add((String)item.getTitle());
+                    queryfiltra();
+                }
+                break;
+            case R.id.vr:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    province.add((String)item.getTitle());
+                    queryfiltra();
+                }
+                break;
+            case R.id.bl:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    province.add((String)item.getTitle());
+                    queryfiltra();
+                }
+                break;
+            case R.id.rg:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    province.add((String)item.getTitle());
+                    queryfiltra();
+                }
+                break;
+            case R.id.ve:
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=province.indexOf((Object) item.getTitle());
+                    province.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    province.add((String)item.getTitle());
+                    queryfiltra();
+                }
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return false;
+    }
+
+    public void queryfiltra (){
+        if((province.isEmpty()||province.size()==7)&&(vincoli.isEmpty())){
+            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola";
+            Cursor cursor = dbm.query(query, null);
+            inserimento(cursor);
+        }
+        else{
+            if (vincoli.isEmpty()) {
+                for (String provincia : province) {
+                    String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=?";
+                    Cursor cursor = dbm.query(query, new String[]{provincia});
+                    inserimento(cursor);
+                }
+            }
+            else{
+                if (province.isEmpty()){
+                    switch (vincoli.size()){
+                        case 1:
+                            String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI'";
+                            Cursor cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
+                        case 2:
+                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                            cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
+                        case 3:
+                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                            cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
+                        case 4:
+                            query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                            cursor = dbm.query(query, null);
+                            inserimento(cursor);
+                            break;
+                    }
+                }
+                else {
+                    switch (vincoli.size()){
+                        case 1:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
+                        case 2:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
+                        case 3:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
+                        case 4:
+                            for (String provincia : province) {
+                                String query = "select * from scuole_veneto inner join vincoli on scuole_veneto.id=vincoli.id_scuola where scuole_veneto.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                inserimento(cursor);
+                            }
+                            break;
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    public void inserimento (Cursor cursor){
+        lstSource.clear();
+        lstSource2.clear();
+        while (cursor.moveToNext()) {
+            int index;
+            index = cursor.getColumnIndexOrThrow("id");
+            String id = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("nome");
+            String nome = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("tipologia_grado_istruzione");
+            String grado = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("provincia");
+            String provincia = cursor.getString(index);
+
+            Scuola s=new Scuola(nome,id);
+            lstSource.add(s);
+            lstSource2.add(grado+" - "+nome);
+        }
+        ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource2);
+        lstView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -222,23 +455,28 @@ public class Aggiungi extends AppCompatActivity {
             index = cursor.getColumnIndexOrThrow("nome");
             String nome = cursor.getString(index);
 
+            index = cursor.getColumnIndexOrThrow("tipologia_grado_istruzione");
+            String grado = cursor.getString(index);
+
             index = cursor.getColumnIndexOrThrow("provincia");
             String provincia = cursor.getString(index);
 
-            index = cursor.getColumnIndexOrThrow("longitudine");
-            String longitudine = cursor.getString(index);
-
-            index = cursor.getColumnIndexOrThrow("sito_web");
-            String sito = cursor.getString(index);
 
             Scuola s=new Scuola(nome,id);
             lstSource.add(s);
-            lstSource2.add(nome);
-
-
+            lstSource2.add(nome+" - "+grado);
 
 
         }
+        HashSet<String> hashSet = new HashSet<String>();
+        HashSet<Scuola> hashSet2 = new HashSet<Scuola>();
+        hashSet2.addAll(lstSource);
+        lstSource.clear();
+        lstSource.addAll(hashSet2);
+        hashSet.addAll(lstSource2);
+        lstSource2.clear();
+        lstSource2.addAll(hashSet);
+
     }
 
 }
