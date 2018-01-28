@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,16 +38,20 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.mipmap.cappellosmall);
         setContentView(R.layout.activity_main);
 
+        String MY_FILE_NAME = "apertura.txt";
+// Create a new output file stream
 
-        //saveToFile("1");
-     /*  String s = ReadFile(MainActivity.this);
-       Log.i("sssssssssssss",s);
-        if (s.equals("1"))
-            saveToFile("0");
-        else {
-            Intent intent = new Intent(getApplicationContext(), Home.class);
-            startActivity(intent);
-        }*/
+// Create a new file input stream.
+        try {
+            FileOutputStream fileos = openFileOutput(MY_FILE_NAME, Context.MODE_PRIVATE);
+            FileInputStream fileis = openFileInput(MY_FILE_NAME);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        Read();
+        Write();
 
 
 
@@ -109,110 +114,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    public static String ReadFile(Context context) {
-        String line = null;
-
+    public void Read(){
+        final int READ_BLOCK_SIZE = 100;
         try {
-            FileInputStream fileInputStream = new FileInputStream(new File(path + fileName));
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder stringBuilder = new StringBuilder();
+            FileInputStream fileIn=openFileInput("apertura.txt");
+            InputStreamReader InputRead= new InputStreamReader(fileIn);
 
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line + System.getProperty("line.separator"));
+            char[] inputBuffer= new char[READ_BLOCK_SIZE];
+            String s="";
+            int charRead;
+
+            while ((charRead=InputRead.read(inputBuffer))>0) {
+                // char to string conversion
+                String readstring=String.copyValueOf(inputBuffer,0,charRead);
+                s +=readstring;
             }
-            fileInputStream.close();
-            line = stringBuilder.toString();
+            InputRead.close();
 
-            bufferedReader.close();
-        } catch (FileNotFoundException ex) {
-            Log.d(TAG, ex.getMessage());
-        } catch (IOException ex) {
-            Log.d(TAG, ex.getMessage());
-        }
-        return line;
-    }
-
-    public static boolean saveToFile(String data) {
-        try {
-            new File(path).mkdir();
-            File file = new File(path + fileName);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream(file, false);
-            fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
-
-            return true;
-        } catch (FileNotFoundException ex) {
-            Log.d(TAG, ex.getMessage());
-        } catch (IOException ex) {
-            Log.d(TAG, ex.getMessage());
-        }
-        return false;
-
-
-    }
-
-
-    public void PlayWithRawFiles() throws IOException {
-        String str = "";
-        StringBuffer buf = new StringBuffer();
-        InputStream is = getResources().getAssets().open("apertura.txt");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        if (is != null) {
-
-            while ((str = reader.readLine()) != null) {
-                buf.append("0\n");
-                Log.i("val",buf.substring(0));
-            }
-        }
-        is.close();
-
-
-    }//
-
-
-    private String readFromFile(Context context) {
-
-        String ret = "";
-
-        try {
-            InputStream inputStream = context.openFileInput("apertura.txt");
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-
-        return ret;
-    }
-
-    private void writeToFile(String data,Context context) {
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();
-        }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+    public void Write(){
+        try {
+            FileOutputStream fileout=openFileOutput("apertura.txt", MODE_PRIVATE);
+            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+            outputWriter.write("0");
+            Log.i("scritto","scritto");
+            outputWriter.close();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
