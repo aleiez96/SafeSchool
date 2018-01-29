@@ -183,8 +183,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
-
-
     <!-- Customize your app's name here. -->
 
     <!-- -->
@@ -222,5 +220,7 @@
     <string name="msg_button_car">Pulsante premuto</string>
     <string name="msg_permissions_not_granted">I permessi appena negati dall\'utente sono necessari per alcune funzionalità dell\'app. Il supporto delle funzionalità sarà ridotto.</string>
     <string name="marker_title">You are HERE</string>
+    <string name="title_activity_info_vincoli">InfoVincoli</string>
+    <string name="info"><p><b>Vincoli Idrogeologici</b>: Indica se l\'edificio si trova in un\'area soggetta a vincolo idrogeologico (SI o NO), ovvero il rischio del verificarsi alluvioni, frane o valanghe.</p>\n<p><b>Vincoli Paesaggio</b>: Indica se l\'edificio si trova in un\'area soggetta a vincolo paesaggistico (SI o NO).</p>\n<p><b>Edificio Vetusto</b>: Indica se l\'edificio ha piu\' di 50 anni (SI o NO).</p>\n<p><b>Progettazione AntiSismica</b>: Indica se l\'edificio e\' stato progettato o successivamente adeguato alla normativa tecnica di costruzione antisismica (SI o NO).</p>\n<p><b>Vincoli Zona Sismica</b>: Indica se l\'edificio si trova in zona sismica (SI o NO), cioè una zona soggetta, per motivi tettonici, a sismi.</p></string>
 
 </resources>

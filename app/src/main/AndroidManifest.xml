@@ -8,8 +8,8 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="false"
@@ -18,10 +18,9 @@
         android:roundIcon="@mipmap/cappello"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
 
-           <!-- android:enabled="true">-->
+            <!-- android:enabled="true"> -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,14 +28,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".Tutorial" />
-        <activity android:name=".Benvenuto"/>
-         <!--android:enabled="false"-->
+        <activity android:name=".Benvenuto" />
+        <!-- android:enabled="false" -->
 
-
-
-
-        <activity android:name=".Home"
-            android:label="Home"/>
+        <activity
+            android:name=".Home"
+            android:label="Home" />
         <activity
             android:name=".Aggiungi"
             android:parentActivityName=".Home" />
@@ -61,13 +58,14 @@
         <activity
             android:name=".ScrollingActivityScuola"
             android:label="@string/title_activity_scrolling_scuola"
-            android:parentActivityName=".pref"/>
+            android:parentActivityName=".pref" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".ActivityInfo" />
-        <activity android:name=".pref"
-            android:parentActivityName=".Home"></activity>
+        <activity
+            android:name=".pref"
+            android:parentActivityName=".Home" />
     </application>
 
 </manifest>

@@ -40,6 +40,7 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pref);
+        setTitle("Preferiti");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -69,6 +70,9 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
             int index = cursor2.getColumnIndexOrThrow("nome");
             String nome=cursor2.getString(index);
 
+            index = cursor2.getColumnIndexOrThrow("tipologia_grado_istruzione");
+            String grado=cursor2.getString(index);
+
             index = cursor2.getColumnIndexOrThrow("id_scuola");
             preferito.setId_scuola(cursor2.getString(index));
 
@@ -79,7 +83,7 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
             preferito.setDescrizione(cursor2.getString(index));
             Log.i("pref",preferito.getId_scuola());
             Log.i("nome",nome);
-            nameproducts.add(nome);
+            nameproducts.add(nome+" - "+ grado);
             preferiti.add(preferito.getId_scuola());
         }
 
@@ -90,7 +94,6 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.pref_menu, menu);
-        //getMenuInflater().inflate(R.menu.refresh, menu);
         if(nameproducts.size()>=0) {
 
             final ArrayList<String> listp = new ArrayList<String>();

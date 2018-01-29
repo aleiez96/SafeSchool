@@ -471,14 +471,6 @@ public class Aggiungi extends AppCompatActivity{
 
 
         }
-        HashSet<String> hashSet = new HashSet<String>();
-        HashSet<Scuola> hashSet2 = new HashSet<Scuola>();
-        hashSet2.addAll(lstSource);
-        lstSource.clear();
-        lstSource.addAll(hashSet2);
-        hashSet.addAll(lstSource2);
-        lstSource2.clear();
-        lstSource2.addAll(hashSet);
 
     }
 
