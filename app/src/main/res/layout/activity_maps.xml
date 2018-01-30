@@ -9,8 +9,8 @@
     <fragment xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="404dp"
-        android:layout_height="611dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:cameraBearing="0"
         app:cameraTargetLat="43.82395946004957"
         app:cameraTargetLng="12.48046875"
@@ -20,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:context="com.nbstutorials.googelemapstutorial.MapsActivity" />
 
 

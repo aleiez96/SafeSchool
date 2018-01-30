@@ -744,12 +744,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void inserimento(Cursor cursor){
         while (cursor.moveToNext()) {
-            int index;
+            int index,index1;
             index = cursor.getColumnIndexOrThrow("id");
-            String den = cursor.getString(index);
-
-            index = cursor.getColumnIndexOrThrow("provincia");
             String snip = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("nome");
+            index1=cursor.getColumnIndexOrThrow("tipologia_grado_istruzione");
+            String den = cursor.getString(index)+" - "+cursor.getString(index1);
 
             index = cursor.getColumnIndexOrThrow("latitudine");
             String lat = cursor.getString(index);
@@ -1018,12 +1019,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Cursor cursor = dbm.query(query, null);
 
         while(cursor.moveToNext()) {
-            int index;
+            int index,index1;
             index = cursor.getColumnIndexOrThrow("id");
-            String den = cursor.getString(index);
-
-            index = cursor.getColumnIndexOrThrow("provincia");
             String snip = cursor.getString(index);
+
+            index = cursor.getColumnIndexOrThrow("nome");
+            index1=cursor.getColumnIndexOrThrow("tipologia_grado_istruzione");
+            String den = cursor.getString(index)+" - "+cursor.getString(index1);
 
 
             index = cursor.getColumnIndexOrThrow("latitudine");
@@ -1043,7 +1045,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
-        intent.putExtra("Codicescuola",marker.getTitle());
+        intent.putExtra("Codicescuola",marker.getSnippet());
         startActivity(intent);
     }
 

@@ -13,6 +13,6 @@
         android:title="Tutorial" />
     <item
         android:id="@+id/navigation_home"
-        android:title="Info" />
+        android:title="Chi siamo?" />
 
 </menu>
