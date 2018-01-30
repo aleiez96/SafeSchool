@@ -761,6 +761,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             MyItem offsetItem = new MyItem(Double.parseDouble(lat), Double.parseDouble(lng), den, snip);
             mClusterManager.addItem(offsetItem);
         }
+        mClusterManager.cluster();
     }
 
     /**
