@@ -17,6 +17,7 @@ public class Tutorial extends AppCompatActivity implements CardStack.CardEventLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Tutorial");
         setContentView(R.layout.activity_tutorial);
         Button b1 = (Button)findViewById(R.id.button1);
         b1.setOnClickListener(new View.OnClickListener() {
@@ -25,24 +26,27 @@ public class Tutorial extends AppCompatActivity implements CardStack.CardEventLi
                 Intent intent=new Intent(getApplicationContext(),
                         Home.class
                 );
-
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
+                System.exit(0);
             }
         });
         
         initcards();
-        /*cardstack= findViewById(R.id.cardstack);
-        cardstack.setContentResource(R.id.cardView);
-        Log.i("ciao","ciao");
+        cardstack= findViewById(R.id.cardstack);
+        cardstack.setContentResource(R.layout.video_layout);
+        cardstack.setStackMargin(20);
         cardstack.setAdapter(cardadapter);
-        cardstack.setListener(this);*/
+
+        cardstack.setListener(this);
     }
 
     private void initcards() {
 
         cardadapter= new CardAdapter(this,0);
-        cardadapter.add(R.id.mappa);
-        cardadapter.add(R.id.preferiti);
+        cardadapter.add(R.drawable.scuola2);
+        cardadapter.add(R.drawable.scuola3);
     }
 
     @Override

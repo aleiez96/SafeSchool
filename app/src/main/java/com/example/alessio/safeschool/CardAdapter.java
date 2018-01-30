@@ -13,7 +13,7 @@ import android.widget.ImageView;
  * Created by massimiliano on 29/01/18.
  */
 
-public class CardAdapter extends ArrayAdapter {
+public class CardAdapter extends ArrayAdapter<Integer> {
 
     public CardAdapter(@NonNull Context context, int resource) {
         super(context, resource);
@@ -23,8 +23,7 @@ public class CardAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ImageView imgtut=convertView.findViewById(R.id.imageViewcard);
-        Log.i("ciao","ciao");
-        imgtut.setImageResource((int) getItem(position));
+        imgtut.setImageResource(getItem(position));
         return convertView;
     }
 }

@@ -9,9 +9,9 @@
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="122dp"
-        android:layout_height="67dp"
-        android:layout_marginBottom="80dp"
+        android:layout_width="102dp"
+        android:layout_height="61dp"
+        android:layout_marginBottom="56dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="#FFFFFF"
@@ -23,17 +23,36 @@
 
     <ImageView
         android:id="@+id/imageView10"
-        android:layout_width="392dp"
-        android:layout_height="185dp"
+        android:layout_width="378dp"
+        android:layout_height="180dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:src="@mipmap/titolo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.818"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.063"
-        android:src="@mipmap/titolo" />
+        app:layout_constraintVertical_bias="0.063" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="317dp"
+        android:layout_height="107dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/yantramanav_light"
+        android:text="Resta sempre aggiornato sulla situazione edilizia delle scuole italiane."
+        android:textAlignment="center"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.61" />
 
 </android.support.constraint.ConstraintLayout>

@@ -12,7 +12,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,41 +69,6 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             throw mSQLException;
         }
 
-        ////////////dati scuola//////////////
-        String query4 = "select * from scuole";
-        Cursor cursor4 =dbm.query(query4, null);
-        Log.e("cursor", cursor4.getColumnName(0));
-        Log.e("cursor", cursor4.getColumnName(1));
-        Log.e("cursor", cursor4.getColumnName(2));
-        Log.e("cursor", cursor4.getColumnName(3));
-        Log.e("cursor", cursor4.getColumnName(4));
-        Log.e("cursor", cursor4.getColumnName(5));
-        Log.e("cursor", cursor4.getColumnName(6));
-        Log.e("cursor", cursor4.getColumnName(7));
-        Log.e("cursor", cursor4.getColumnName(8));
-        Log.e("cursor", cursor4.getColumnName(9));
-        Log.e("cursor", cursor4.getColumnName(10));
-        Log.e("cursor", cursor4.getColumnName(11));
-        Log.e("cursor", cursor4.getColumnName(12));
-        Log.e("cursor", cursor4.getColumnName(13));
-        Log.e("cursor", cursor4.getColumnName(14));
-        Log.e("cursor", cursor4.getColumnName(15));
-        Log.e("cursor", cursor4.getColumnName(16));
-        Log.e("cursor", cursor4.getColumnName(17));
-        Log.e("cursor", cursor4.getColumnName(18));
-        Log.e("cursor", cursor4.getColumnName(19));
-        Log.e("cursor", cursor4.getColumnName(20));
-        String query3 = "select * from vincoli";
-        Cursor cursor3 =dbm.query(query3, null);
-        Log.e("cursor", cursor3.getColumnName(0));
-        Log.e("cursor", cursor3.getColumnName(1));
-        Log.e("cursor", cursor3.getColumnName(2));
-        Log.e("cursor", cursor3.getColumnName(3));
-        Log.e("cursor", cursor3.getColumnName(4));
-        Log.e("cursor", cursor3.getColumnName(5));
-        Log.e("cursor", cursor3.getColumnName(6));
-        Log.e("cursor", cursor3.getColumnName(7));
-
 
         String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
         Cursor cursor =dbm.query(query, null);
@@ -117,11 +81,9 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             int index;
             index = cursor.getColumnIndexOrThrow("id");
             scuola.setId(cursor.getString(index));
-            Log.e("1",cursor.getString(index));
             String id = cursor.getString(index);
             if (id.equals(dato1)){
                 index = cursor.getColumnIndexOrThrow("nome");
-                Log.e("1",cursor.getString(index));
                 scuola.setNome(cursor.getString(index).replaceAll("\\s+"," "));
                 index = cursor.getColumnIndexOrThrow("istituto_rif_nome");
                 nome=cursor.getString(index);

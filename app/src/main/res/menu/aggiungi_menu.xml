@@ -20,17 +20,31 @@
                 android:checkableBehavior="all">
                 <item
                     android:checkable="false"
-                    android:title="Regione">
+                    android:title="Grado di istruzione">
                     <menu>
                         <group
-                            android:id="@+id/regione"
+                            android:id="@+id/grado"
                             android:checkableBehavior="all">
                             <item
-                                android:id="@+id/ven"
-                                android:title="Veneto" />
+                                android:id="@+id/infanzia"
+                                android:title="Scuola dell'infanzia"
+                                android:checked="false"/>
                             <item
-                                android:id="@+id/abr"
-                                android:title="Abruzzo" />
+                                android:id="@+id/primaria"
+                                android:title="Scuola primaria"
+                                android:checked="false"/>
+                            <item
+                                android:id="@+id/primo"
+                                android:title="Scuola primo grado"
+                                android:checked="false"/>
+                            <item
+                                android:id="@+id/compr"
+                                android:title="Istituto comprensivo"
+                                android:checked="false"/>
+                            <item
+                                android:id="@+id/licei"
+                                android:title="Licei, Istituti e altro"
+                                android:checked="false"/>
                         </group>
                     </menu>
                 </item>
