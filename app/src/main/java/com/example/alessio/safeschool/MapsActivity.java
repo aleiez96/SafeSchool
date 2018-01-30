@@ -246,6 +246,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.navigation_home:
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
+            case R.id.filtri:
+                gMap.clear();
+                mClusterManager.clearItems();
+                invalidateOptionsMenu();
+                province.clear();
+                grado.clear();
+                vincoli.clear();
+                queryfiltra();
+                break;
             case R.id.infanzia:
                 gMap.clear();
                 mClusterManager.clearItems();
@@ -802,10 +811,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, R.string.conn_failed, Toast.LENGTH_LONG).show();
     }
 
-    // maps callbacks
-    //
-    //
-
     /**
      * Chiamare questo metodo per aggiornare la posizione corrente del GPS.
      * Si tratta di un metodo proprietario, che non ridefinisce alcun metodo della superclasse né implementa alcuna interfaccia: un metodo
@@ -863,21 +868,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    /**
-     * Metodo proprietario che imposta la visibilità del pulsante HERE.
-     * Si occupa di nascondere o mostrare il pulsante HERE in base allo zoom attuale, confrontandolo con la soglia di zoom
-     * impostanta nelle preferenze.
-     * Questo comportamento è dimostrativo e non è necessario tenerlo quando si sviluppa un'applicazione modificando questo template.
-     */
-    /*public void setHereButtonVisibility() {
-        if (gMap != null) {
-            if (gMap.getCameraPosition().zoom < SettingsActivity.getZoomThreshold(this)) {
-                button_here.setVisibility(View.INVISIBLE);
-            } else {
-                button_here.setVisibility(View.VISIBLE);
-            }
-        }
-    }*/
 
     /**
      * Questo metodo è molto importante: esso viene invocato dal sistema quando la mappa è pronta.
