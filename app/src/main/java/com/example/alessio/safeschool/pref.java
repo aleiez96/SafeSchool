@@ -124,24 +124,17 @@ public class pref extends AppCompatActivity implements SwipeRefreshLayout.OnRefr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
-
-        if(item.isChecked())
-            item.setChecked(false);
-        else
-            item.setChecked(true);
         switch (item.getItemId()) {
-            case R.id.tutorial_item:
+            case R.id.navigation_notifications:
                 intent=new Intent(getApplicationContext(),Tutorial.class);
                 startActivity(intent);
                 return true;
-            case R.id.info_item:
+            case R.id.navigation_home:
                 intent=new Intent(getApplicationContext(),ActivityInfo.class);
                 startActivity(intent);
             case R.id.aggiungi:
                 intent=new Intent(getApplicationContext(),Aggiungi.class);
                 startActivity(intent);
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }

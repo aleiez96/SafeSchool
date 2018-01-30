@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
                 .getBoolean("isFirstRun", true);
 
-        /*if (isFirstRun) {
+        if (isFirstRun) {
         }
         else{
             Intent intent = new Intent(getApplicationContext(), Home.class);
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             System.exit(0);
         }
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
-                .putBoolean("isFirstRun", false).commit();*/
+                .putBoolean("isFirstRun", false).commit();
 
 
         Button b1 = (Button) findViewById(R.id.button1);

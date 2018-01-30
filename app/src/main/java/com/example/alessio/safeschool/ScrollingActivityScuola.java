@@ -41,7 +41,6 @@ public class ScrollingActivityScuola extends AppCompatActivity {
     static DbManager dbm;
     static SQLiteDatabase mDb;
     TabHost tabHost;
-    RelativeLayout mRelative;
     private PopupWindow mPopupWindow;
 
 

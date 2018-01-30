@@ -18,7 +18,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Applicazione sviluppata come progetto per il corso di Ingegneria del Software per il Corso di laurea in Informaticapresso l'Università Ca' Foscari di Venezia.\n\n\nPer maggiori informazzioni contattaci su: \n\n\nVersione 1.0 @ SAM TEAM, 2018."
+        android:text="Applicazione sviluppata come progetto per il corso di Ingegneria del Software per il Corso di laurea in Informaticapresso l'Università Ca' Foscari di Venezia.\n\n\nPer maggiori informazzioni contattaci su:\nSSSamteam@gmail.com \n\nVersione 1.0 @ SAM TEAM, 2018."
         android:textColor="#ffffff"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

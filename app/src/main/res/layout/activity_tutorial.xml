@@ -2,41 +2,43 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.alessio.safeschool.Tutorial"
-    android:background="#ff000000">
+    android:background="#ff000000"
+    android:backgroundTint="?attr/colorPrimary"
+    tools:context="com.example.alessio.safeschool.Tutorial">
+
+    <com.wenchao.cardstack.CardStack
+        android:id="@+id/cardstack"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+    </com.wenchao.cardstack.CardStack>
 
     <Button
         android:id="@+id/button1"
         android:layout_width="122dp"
         android:layout_height="67dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="276dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="#FFFFFF"
-        android:text="Ho capito"
+        android:text="Iniziamo!"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.wenchao.cardstack.CardStack
-        android:id="@+id/cardstack"
-        android:layout_width="395dp"
-        android:layout_height="487dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.146"
-        android:padding="20dp"
-        android:clipToPadding="false">
-
-    </com.wenchao.cardstack.CardStack>
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

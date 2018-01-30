@@ -246,6 +246,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.navigation_home:
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
+            case R.id.navigation_notifications:
+                startActivity(new Intent(this, Tutorial.class));
+                break;
             case R.id.filtri:
                 gMap.clear();
                 mClusterManager.clearItems();
