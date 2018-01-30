@@ -22,8 +22,8 @@ public class CardAdapter extends ArrayAdapter<Integer> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        ImageView imgtut=convertView.findViewById(R.id.imageViewcard);
-        imgtut.setImageResource(getItem(position));
+        pl.droidsonroids.gif.GifTextView imgtut=convertView.findViewById(R.id.imageViewcard);
+        imgtut.setBackgroundResource(getItem(position));
         return convertView;
     }
 }

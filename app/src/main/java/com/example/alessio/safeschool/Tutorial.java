@@ -45,6 +45,7 @@ public class Tutorial extends AppCompatActivity implements CardStack.CardEventLi
     private void initcards() {
 
         cardadapter= new CardAdapter(this,0);
+        cardadapter.add(R.drawable.download);
         cardadapter.add(R.drawable.scuola2);
         cardadapter.add(R.drawable.scuola3);
     }
