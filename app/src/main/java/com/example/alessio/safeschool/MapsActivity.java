@@ -63,6 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     static ArrayList<String> province = new ArrayList<>();
     static ArrayList<String> vincoli = new ArrayList<>();
+    static ArrayList<String> grado = new ArrayList<>();
     static DataBaseHelper mDBHelper;
     static DbManager dbm;
     static SQLiteDatabase mDb;
@@ -96,6 +97,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        province.clear();
+        grado.clear();
+        vincoli.clear();
 
 
         mDBHelper = new DataBaseHelper(MapsActivity.this);
@@ -235,13 +239,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Checkable ve= findViewById(R.id.ve);
-        Checkable vi= findViewById(R.id.vi);
-        Checkable vr= findViewById(R.id.vr);
-        Checkable tv= findViewById(R.id.tv);
-        Checkable rg= findViewById(R.id.rg);
-        Checkable pd= findViewById(R.id.pd);
-        Checkable bl= findViewById(R.id.bl);
         switch (item.getItemId()) {
             case R.id.Impostazioni:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -249,26 +246,84 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.navigation_home:
                 startActivity(new Intent(this, ActivityInfo.class));
                 break;
-            case R.id.ven:
+            case R.id.infanzia:
+                gMap.clear();
+                mClusterManager.clearItems();
                 if(item.isChecked()) {
                     item.setChecked(false);
-                    ve.setChecked(false);
-                    vi.setChecked(false);
-                    vr.setChecked(false);
-                    tv.setChecked(false);
-                    rg.setChecked(false);
-                    pd.setChecked(false);
-                    bl.setChecked(false);
+                    int i;
+                    i=grado.indexOf((Object) "SCUOLA INFANZIA");
+                    grado.remove(i);
+                    queryfiltra();
                 }
                 else {
                     item.setChecked(true);
-                    ve.setChecked(true);
-                    vi.setChecked(true);
-                    vr.setChecked(true);
-                    tv.setChecked(true);
-                    rg.setChecked(true);
-                    pd.setChecked(true);
-                    bl.setChecked(true);
+                    grado.add("SCUOLA INFANZIA");
+                    queryfiltra();
+                }
+                break;
+            case R.id.primaria:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=grado.indexOf((Object) "SCUOLA PRIMARIA");
+                    grado.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    grado.add("SCUOLA PRIMARIA");
+                    queryfiltra();
+                }
+                break;
+            case R.id.primo:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=grado.indexOf((Object) "SCUOLA PRIMO GRADO");
+                    grado.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    grado.add("SCUOLA PRIMO GRADO");
+                    queryfiltra();
+                }
+                break;
+            case R.id.compr:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=grado.indexOf((Object) "ISTITUTO COMPRENSIVO");
+                    grado.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    grado.add("ISTITUTO COMPRENSIVO");
+                    queryfiltra();
+                }
+                break;
+            case R.id.licei:
+                gMap.clear();
+                mClusterManager.clearItems();
+                if(item.isChecked()) {
+                    item.setChecked(false);
+                    int i;
+                    i=grado.indexOf((Object) "ALTRO");
+                    grado.remove(i);
+                    queryfiltra();
+                }
+                else {
+                    item.setChecked(true);
+                    grado.add("ALTRO");
+                    queryfiltra();
                 }
                 break;
             case R.id.p1:
@@ -457,13 +512,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public void queryfiltra (){
-        if((province.isEmpty()||province.size()==7)&&(vincoli.isEmpty())){
+        if((province.isEmpty()||province.size()==7)&&(vincoli.isEmpty())&&(grado.isEmpty()||grado.size()==4)){
             String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola";
             Cursor cursor = dbm.query(query, null);
             inserimento(cursor);
         }
         else{
-            if (vincoli.isEmpty()) {
+            if (vincoli.isEmpty()&&(grado.isEmpty())) {
                 for (String provincia : province) {
                     String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=?";
                     Cursor cursor = dbm.query(query, new String[]{provincia});
@@ -471,62 +526,216 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
             else{
-                if (province.isEmpty()){
-                    switch (vincoli.size()){
-                        case 1:
-                            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI'";
+                if (vincoli.isEmpty()&&(province.isEmpty())) {
+                    for (String grado : grado) {
+                        if (grado.equals("ALTRO")){
+                            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO'";
                             Cursor cursor = dbm.query(query, null);
                             inserimento(cursor);
-                            break;
-                        case 2:
-                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
-                            cursor = dbm.query(query, null);
+                        }
+                        else{
+                            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione=?";
+                            Cursor cursor = dbm.query(query, new String[]{grado});
                             inserimento(cursor);
-                            break;
-                        case 3:
-                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
-                            cursor = dbm.query(query, null);
-                            inserimento(cursor);
-                            break;
-                        case 4:
-                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
-                            cursor = dbm.query(query, null);
-                            inserimento(cursor);
-                            break;
+                        }
                     }
                 }
                 else {
-                    switch (vincoli.size()){
-                        case 1:
-                            for (String provincia : province) {
-                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI'";
-                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                    if ((province.isEmpty()) && (grado.isEmpty())) {
+                        switch (vincoli.size()) {
+                            case 1:
+                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI'";
+                                Cursor cursor = dbm.query(query, null);
                                 inserimento(cursor);
-                            }
-                            break;
-                        case 2:
-                            for (String provincia : province) {
-                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
-                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                break;
+                            case 2:
+                                query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                cursor = dbm.query(query, null);
                                 inserimento(cursor);
-                            }
-                            break;
-                        case 3:
-                            for (String provincia : province) {
-                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
-                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                break;
+                            case 3:
+                                query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                cursor = dbm.query(query, null);
                                 inserimento(cursor);
-                            }
-                            break;
-                        case 4:
-                            for (String provincia : province) {
-                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
-                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                break;
+                            case 4:
+                                query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                cursor = dbm.query(query, null);
                                 inserimento(cursor);
-                            }
-                            break;
+                                break;
+                        }
                     }
+                    else {
+                        if (vincoli.isEmpty()) {
+                            for (String provincia : province) {
+                                for (String grado : grado) {
+                                    if (grado.equals("ALTRO")){
+                                        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO'";
+                                        Cursor cursor = dbm.query(query, new String[]{provincia});
+                                        inserimento(cursor);
+                                    }
+                                    else {
+                                        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and scuole.tipologia_grado_istruzione=?";
+                                        Cursor cursor = dbm.query(query, new String[]{provincia, grado});
+                                        inserimento(cursor);
+                                    }
+                                }
+                            }
+                        }
+                        if (province.isEmpty()) {
+                            for (String grado : grado) {
+                                if (grado.equals("ALTRO")){
+                                    switch (vincoli.size()) {
+                                        case 1:
+                                            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and vincoli." + vincoli.get(0) + "='SI'";
+                                            Cursor cursor = dbm.query(query, null);
+                                            inserimento(cursor);
+                                            break;
+                                        case 2:
+                                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                            cursor = dbm.query(query, null);
+                                            inserimento(cursor);
+                                            break;
+                                        case 3:
+                                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                            cursor = dbm.query(query, null);
+                                            inserimento(cursor);
+                                            break;
+                                        case 4:
+                                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                            cursor = dbm.query(query, null);
+                                            inserimento(cursor);
+                                            break;
+                                    }
+                                }
+                                else {
+                                    switch (vincoli.size()) {
+                                        case 1:
+                                            String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI'";
+                                            Cursor cursor = dbm.query(query, new String[]{grado});
+                                            inserimento(cursor);
+                                            break;
+                                        case 2:
+                                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                            cursor = dbm.query(query, new String[]{grado});
+                                            inserimento(cursor);
+                                            break;
+                                        case 3:
+                                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                            cursor = dbm.query(query, new String[]{grado});
+                                            inserimento(cursor);
+                                            break;
+                                        case 4:
+                                            query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                            cursor = dbm.query(query, new String[]{grado});
+                                            inserimento(cursor);
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        if (grado.isEmpty()) {
+                            switch (vincoli.size()) {
+                                case 1:
+                                    for (String provincia : province) {
+                                        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI'";
+                                        Cursor cursor = dbm.query(query, new String[]{provincia});
+                                        inserimento(cursor);
+                                    }
+                                    break;
+                                case 2:
+                                    for (String provincia : province) {
+                                        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                        Cursor cursor = dbm.query(query, new String[]{provincia});
+                                        inserimento(cursor);
+                                    }
+                                    break;
+                                case 3:
+                                    for (String provincia : province) {
+                                        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                        Cursor cursor = dbm.query(query, new String[]{provincia});
+                                        inserimento(cursor);
+                                    }
+                                    break;
+                                case 4:
+                                    for (String provincia : province) {
+                                        String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                        Cursor cursor = dbm.query(query, new String[]{provincia});
+                                        inserimento(cursor);
+                                    }
+                                    break;
+                            }
+                        }
+                        else {
+                            for (String grado : grado) {
+                                if (grado.equals("ALTRO")){
+                                    switch (vincoli.size()) {
+                                        case 1:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                        case 2:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                        case 3:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                        case 4:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.tipologia_grado_istruzione<>'SCUOLA INFANZIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMARIA' and scuole.tipologia_grado_istruzione<>'SCUOLA PRIMO GRADO' and scuole.tipologia_grado_istruzione<>'ISTITUTO COMPRENSIVO' and scuole.provincia=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                    }
+                                }
+                                else {
+                                    switch (vincoli.size()) {
+                                        case 1:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia, grado});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                        case 2:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia, grado});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                        case 3:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia, grado});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                        case 4:
+                                            for (String provincia : province) {
+                                                String query = "select * from scuole inner join vincoli on scuole.id=vincoli.id_scuola where scuole.provincia=? and scuole.tipologia_grado_istruzione=? and vincoli." + vincoli.get(0) + "='SI' and vincoli." + vincoli.get(1) + "='SI' and vincoli." + vincoli.get(2) + "='SI' and vincoli." + vincoli.get(3) + "='SI'";
+                                                Cursor cursor = dbm.query(query, new String[]{provincia, grado});
+                                                inserimento(cursor);
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
 
+                        }
+                    }
                 }
             }
 

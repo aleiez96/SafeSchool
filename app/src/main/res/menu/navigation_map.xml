@@ -12,18 +12,30 @@
                 android:checkableBehavior="all">
                 <item
                     android:checkable="false"
-                    android:title="Regione">
+                    android:title="Grado di istruzione">
                     <menu>
                         <group
-                            android:id="@+id/regione"
+                            android:id="@+id/grado"
                             android:checkableBehavior="all">
                             <item
-                                android:id="@+id/ven"
-                                android:title="Veneto"
+                                android:id="@+id/infanzia"
+                                android:title="Scuola dell'infanzia"
                                 android:checked="false"/>
                             <item
-                                android:id="@+id/abr"
-                                android:title="Abruzzo"
+                                android:id="@+id/primaria"
+                                android:title="Scuola primaria"
+                                android:checked="false"/>
+                            <item
+                                android:id="@+id/primo"
+                                android:title="Scuola primo grado"
+                                android:checked="false"/>
+                            <item
+                                android:id="@+id/compr"
+                                android:title="Istituto comprensivo"
+                                android:checked="false"/>
+                            <item
+                                android:id="@+id/licei"
+                                android:title="Licei, Istituti e altro"
                                 android:checked="false"/>
                         </group>
                     </menu>
@@ -42,66 +54,37 @@
                                         <item
                                             android:id="@+id/tv"
                                             android:text="Treviso"
-                                            android:title="Treviso"
+                                            android:title="TREVISO"
                                             android:checked="false"/>
                                         <item
                                             android:id="@+id/pd"
                                             android:text="Padova"
-                                            android:title="Padova"
+                                            android:title="PADOVA"
                                             android:checked="false"/>
                                         <item
                                             android:id="@+id/ve"
                                             android:text="Venezia"
-                                            android:title="Venezia"
+                                            android:title="VENEZIA"
                                             android:checked="false"/>
                                         <item
                                             android:id="@+id/vr"
                                             android:text="Verona"
-                                            android:title="Verona"
+                                            android:title="VERONA"
                                             android:checked="false"/>
                                         <item
                                             android:id="@+id/vi"
                                             android:text="Vicenza"
-                                            android:title="Vicenza"
+                                            android:title="VICENZA"
                                             android:checked="false"/>
                                         <item
                                             android:id="@+id/bl"
                                             android:text="Belluno"
-                                            android:title="Belluno"
+                                            android:title="BELLUNO"
                                             android:checked="false"/>
                                         <item
                                             android:id="@+id/rg"
                                             android:text="Rovigo"
-                                            android:title="Rovigo"
-                                            android:checked="false"/>
-                                    </group>
-                                </menu>
-                            </item>
-                            <item android:title="Abruzzo">
-                                <menu>
-                                    <group
-                                        android:id="@+id/checkable_item2"
-                                        android:checkableBehavior="all"
-                                        android:visible="true">
-                                        <item
-                                            android:id="@+id/ch"
-                                            android:text="Chieti"
-                                            android:title="CHIETI"
-                                            android:checked="false"/>
-                                        <item
-                                            android:id="@+id/ps"
-                                            android:text="Pescara"
-                                            android:title="PESCARA"
-                                            android:checked="false"/>
-                                        <item
-                                            android:id="@+id/aq"
-                                            android:text="L'Aquila"
-                                            android:title="L'AQUILA"
-                                            android:checked="false"/>
-                                        <item
-                                            android:id="@+id/tr"
-                                            android:text="Teramo"
-                                            android:title="TERAMO"
+                                            android:title="ROVIGO"
                                             android:checked="false"/>
                                     </group>
                                 </menu>

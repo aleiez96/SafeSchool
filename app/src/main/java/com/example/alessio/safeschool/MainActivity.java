@@ -33,9 +33,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.cappellosmall);
         setContentView(R.layout.activity_main);
 
         String MY_FILE_NAME = "apertura.txt";

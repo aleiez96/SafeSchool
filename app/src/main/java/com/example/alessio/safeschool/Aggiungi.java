@@ -159,12 +159,6 @@ public class Aggiungi extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.action_search:
                 return true;
-            case R.id.checkable_item1:
-                Toast.makeText(this, "Filtro regione", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.checkable_item2:
-                Toast.makeText(this, "Filtro provincia", Toast.LENGTH_SHORT).show();
-                return true;
             case R.id.p1:
                 if(item.isChecked()) {
                     item.setChecked(false);

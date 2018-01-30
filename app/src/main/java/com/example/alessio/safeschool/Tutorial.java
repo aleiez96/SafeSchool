@@ -17,16 +17,13 @@ public class Tutorial extends AppCompatActivity implements CardStack.CardEventLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.cappellosmall);
         setContentView(R.layout.activity_tutorial);
         Button b1 = (Button)findViewById(R.id.button1);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(),
-                        Benvenuto.class
+                        Home.class
                 );
 
                 startActivity(intent);

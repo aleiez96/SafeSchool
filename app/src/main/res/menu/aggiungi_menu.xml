@@ -6,7 +6,7 @@
         android:id="@+id/action_search"
         android:icon="@drawable/ic_action_action_search"
         android:orderInCategory="100"
-        android:title="Search..."
+        android:title="Cerca..."
         app:showAsAction="always"
         />
 
@@ -95,31 +95,6 @@
                                             android:id="@+id/rg"
                                             android:text="ROVIGO"
                                             android:title="ROVIGO" />
-                                    </group>
-                                </menu>
-                            </item>
-                            <item android:title="Abruzzo" >
-                                <menu>
-                                    <group
-                                        android:id="@+id/checkable_item2"
-                                        android:checkableBehavior="all"
-                                        android:visible="true">
-                                        <item
-                                            android:id="@+id/ch"
-                                            android:text="CHIETI"
-                                            android:title="CHIETI" />
-                                        <item
-                                            android:id="@+id/ps"
-                                            android:text="PESCARA"
-                                            android:title="PESCARA" />
-                                        <item
-                                            android:id="@+id/aq"
-                                            android:text="L'AQUILA"
-                                            android:title="L'AQUILA" />
-                                        <item
-                                            android:id="@+id/tr"
-                                            android:text="TERAMO"
-                                            android:title="TERAMO" />
                                     </group>
                                 </menu>
                             </item>

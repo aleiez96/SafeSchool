@@ -15,7 +15,7 @@
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:backgroundTint="#f000"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
