@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,15 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 
 public class Aggiungi extends AppCompatActivity{
 
@@ -100,7 +93,7 @@ public class Aggiungi extends AppCompatActivity{
                         item=lstSource.get(i).getNome();
                         if(item.contains(newText)) {
                             id_s.add(lstSource.get(i).getId());
-                            lstFound.add(item);
+                            lstFound.add(lstSource.get(i).getId()+" - "+item);
                         }
 
                     }
@@ -139,9 +132,7 @@ public class Aggiungi extends AppCompatActivity{
                 else {
                     Log.e("w",lstSource2.get(position));
                     while (lstSource.get(i).getNome().equals("SCUOLA INFANZIA") || !(lstSource2.get(position).contains(lstSource.get(i).getNome()))) {
-                        Log.e("a",lstSource.get(i).getNome());
                         i++;}
-                    Log.e("a",lstSource.get(i).getNome());
                     Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
                     intent.putExtra("Codicescuola", lstSource.get(i).getId());
                     startActivity(intent);
@@ -169,6 +160,13 @@ public class Aggiungi extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.action_search:
                 return true;
+            case R.id.filtri:
+                invalidateOptionsMenu();
+                province.clear();
+                grado.clear();
+                vincoli.clear();
+                queryfiltra();
+                break;
             case R.id.infanzia:
                 if(item.isChecked()) {
                     item.setChecked(false);

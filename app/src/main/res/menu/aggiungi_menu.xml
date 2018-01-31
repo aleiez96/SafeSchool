@@ -116,6 +116,11 @@
 
                     </menu>
                 </item>
+                <item
+                    android:id="@+id/filtri"
+                    android:text="Rimuovi tutti i filtri"
+                    android:title="Rimuovi tutti i filtri"
+                    android:checkable="false"/>
 
             </group>
         </menu>
