@@ -45,7 +45,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/yantramanav_light"
-        android:text="Resta sempre aggiornato sulla situazione edilizia delle scuole italiane."
+        android:text="Resta sempre aggiornato sulla situazione edilizia delle scuole italiane!"
         android:textAlignment="center"
         android:textColor="@color/cardview_light_background"
         android:textSize="20sp"

@@ -84,6 +84,8 @@ public class Tutorial extends AppCompatActivity implements CardStack.CardEventLi
         if (mIndex==4){
             Button bu=findViewById(R.id.button1);
             bu.setVisibility(View.VISIBLE);
+            TextView tx=findViewById(R.id.textView11);
+            tx.setVisibility(View.VISIBLE);
         }
     }
 
