@@ -33,7 +33,7 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="161dp"
+        android:layout_width="wrap_content"
         android:layout_height="170dp"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
@@ -100,25 +100,25 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tabHost"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.574"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.239" />
+        app:layout_constraintHorizontal_bias="0.168"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
 
     <TabHost
         android:id="@+id/tabHost"
-        android:layout_width="match_parent"
-        android:layout_height="431dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -161,22 +161,21 @@
 
                         <TextView
                             android:id="@+id/textView5"
-                            android:layout_width="187dp"
+                            android:layout_width="168dp"
                             android:layout_height="61dp"
                             android:layout_centerVertical="true"
                             android:layout_marginBottom="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
                             android:text="Istituto di riferimento (Codice):"
                             android:textColor="@color/common_google_signin_btn_text_dark_focused"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/textView13"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.024" />
+                            app:layout_constraintVertical_bias="0.031" />
 
                         <TextView
                             android:id="@+id/textView13"
@@ -203,16 +202,16 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="16dp"
                             android:text="Contatti:"
                             android:textColor="@color/common_google_signin_btn_text_dark_focused"
                             android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.024"
+                            app:layout_constraintBottom_toTopOf="@+id/cardView"
+                            app:layout_constraintEnd_toStartOf="@+id/textView15"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.447" />
+                            app:layout_constraintTop_toBottomOf="@+id/textView12"
+                            app:layout_constraintVertical_bias="0.09" />
 
                         <TextView
                             android:id="@+id/textView15"
@@ -244,11 +243,10 @@
                             android:textColor="@color/common_google_signin_btn_text_dark_focused"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.038"
+                            app:layout_constraintEnd_toStartOf="@+id/textView14"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.238" />
+                            app:layout_constraintVertical_bias="0.235" />
 
                         <TextView
                             android:id="@+id/textView14"
