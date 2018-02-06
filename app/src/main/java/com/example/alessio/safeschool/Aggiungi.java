@@ -6,7 +6,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,7 +51,6 @@ public class Aggiungi extends AppCompatActivity{
 
 
         searchView = (MaterialSearchView)findViewById(R.id.search_view);
-        Log.i("nome","ok 1");
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
@@ -63,7 +61,6 @@ public class Aggiungi extends AppCompatActivity{
 
             @Override
             public void onSearchViewClosed() {
-                //If closed Search View , lstView will return default
                 lstView = (ListView)findViewById(R.id.lstView);
 
                 ArrayAdapter adapter = new ArrayAdapter(Aggiungi.this,android.R.layout.simple_list_item_1,lstSource2);
@@ -82,7 +79,7 @@ public class Aggiungi extends AppCompatActivity{
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                newText = newText.toUpperCase();
                 if(newText != null && !newText.isEmpty()){
                     lstView.clearDisappearingChildren();
                     String item;
@@ -123,14 +120,13 @@ public class Aggiungi extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int i=0;
                 if(id_s!=null){
-                    while (!(lstFound.get(position).equals(lstSource.get(i).getNome()))) {
+                    while (!(lstFound.get(position).equals(lstSource.get(i).getId()+" - "+lstSource.get(i).getNome()))) {
                         i++;
                     }
                     Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);
                     intent.putExtra("Codicescuola", lstSource.get(i).getId());
                     startActivity(intent);}
                 else {
-                    Log.e("w",lstSource2.get(position));
                     while (lstSource.get(i).getNome().equals("SCUOLA INFANZIA") || !(lstSource2.get(position).contains(lstSource.get(i).getNome()))) {
                         i++;}
                     Intent intent=new Intent(getApplicationContext(), ScrollingActivityScuola.class);

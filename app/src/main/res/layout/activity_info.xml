@@ -10,8 +10,8 @@
 
     <TextView
         android:id="@+id/textView_1"
-        android:layout_width="379dp"
-        android:layout_height="215dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
         android:layout_alignParentStart="false"
         android:layout_marginBottom="8dp"
@@ -19,6 +19,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Applicazione sviluppata come progetto per il corso di Ingegneria del Software per il Corso di laurea in Informaticapresso l'Università Ca' Foscari di Venezia.\n\n\nPer maggiori informazzioni contattaci su:\nSSSamteam@gmail.com \n\nVersione 1.0 @ SAM TEAM, 2018."
+        android:textAlignment="center"
         android:textColor="#ffffff"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,8 +31,8 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="328dp"
-        android:layout_height="61dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -64,7 +65,7 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -83,14 +84,14 @@
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="314dp"
-        android:layout_height="102dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="- Gonella Massimiliano\n-Iezzi Alessio\n-Ormitti Filippo\n-Zottin Silvia"
-        android:textAlignment="viewStart"
+        android:text="- Gonella Massimiliano\n- Iezzi Alessio\n- Ormitti Filippo\n- Zottin Silvia"
+        android:textAlignment="center"
         android:textColor="@color/cardview_light_background"
         android:textSize="18sp"
         android:textStyle="italic"
