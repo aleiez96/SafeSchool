@@ -202,7 +202,7 @@ public class ScrollingActivityScuola extends AppCompatActivity {
             if (preferito.getId_scuola().equals(dato1)) {
                 index = cursor5.getColumnIndexOrThrow("data_inserimento");
                 preferito.setData_inserimento(cursor5.getString(index));
-                TextView data = findViewById(R.id.textView8);
+                TextView data = findViewById(R.id.textView18);
                 data.setText("Aggiunto ai preferiti in data "+preferito.getData_inserimento()+".");
             }
         }

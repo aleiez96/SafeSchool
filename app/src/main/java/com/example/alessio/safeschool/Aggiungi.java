@@ -38,6 +38,7 @@ public class Aggiungi extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aggiungi);
+        setTitle("Sfoglia");
         aggiungi();
         grado.clear();
         province.clear();

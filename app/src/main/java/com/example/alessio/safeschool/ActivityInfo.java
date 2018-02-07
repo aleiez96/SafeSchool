@@ -9,6 +9,7 @@ public class ActivityInfo extends AppCompatActivity {
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_info);
+        setTitle("Informazioni");
     }
 
 }
